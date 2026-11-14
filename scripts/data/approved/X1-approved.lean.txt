@@ -1,0 +1,44 @@
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.MeasureTheory.Function.LpSeminorm.Defs
+public import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
+public import Mathlib.MeasureTheory.Measure.Count
+public import Mathlib.MeasureTheory.MeasurableSpace.Instances
+public import Mathlib.Data.Finsupp.Indicator
+public import Mathlib.Topology.Algebra.InfiniteSum.Defs
+public import Mathlib.Topology.Algebra.InfiniteSum.Basic
+public import Mathlib.Topology.Algebra.InfiniteSum.Group
+public import Mathlib.Topology.Algebra.InfiniteSum.Ring
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+public import Mathlib.Topology.Algebra.Support
+public import PrimeBHT.Frozen.IsCutoff
+
+@[expose] public noncomputable section
+
+open MeasureTheory Filter Topology
+open scoped ENNReal
+
+set_option autoImplicit false
+
+namespace PrimeBHT.Statements
+
+/-- The discrete bilinear Hilbert transform with a smooth truncation at radii `L₁ < L₂`:
+`∑_{m ≠ 0} ((χ(m/L₂) - χ(m/L₁)) / m) f(x - m) g(x + m)`. -/
+def bhtTrunc (χ : ℝ → ℝ) (L₁ L₂ : ℝ) (f g : ℤ → ℂ) (x : ℤ) : ℂ :=
+  ∑' m : ℤ, (if m = 0 then 0 else (((χ (m / L₂) - χ (m / L₁)) / m : ℝ) : ℂ)) *
+    f (x - m) * g (x + m)
+
+/-- **X1.** For every cutoff `χ` and every `1 < p, q`, `1/r = 1/p + 1/q`, `2/3 < r` there is a constant `C`
+such that for all real `0 < L₁ < L₂` and all finitely supported `f, g : ℤ → ℂ`,
+`‖bhtTrunc χ L₁ L₂ f g‖_{ℓ^r} ≤ C ‖f‖_{ℓ^p} ‖g‖_{ℓ^q}`. -/
+theorem x1_bht_smooth : ∀ χ : ℝ → ℝ, IsCutoff χ →
+    ∀ p q r : ℝ, 1 < p → 1 < q → 1 / r = 1 / p + 1 / q → 2 / 3 < r →
+      ∃ C : ℝ, ∀ L₁ L₂ : ℝ, 0 < L₁ → L₁ < L₂ →
+        ∀ f g : ℤ → ℂ, (Function.support f).Finite → (Function.support g).Finite →
+          eLpNorm (bhtTrunc χ L₁ L₂ f g) (ENNReal.ofReal r) Measure.count ≤
+            ENNReal.ofReal C * eLpNorm f (ENNReal.ofReal p) Measure.count *
+              eLpNorm g (ENNReal.ofReal q) Measure.count := by
+  sorry
+
+end PrimeBHT.Statements

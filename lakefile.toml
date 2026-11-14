@@ -1,0 +1,69 @@
+name = "PrimeBHT"
+version = "0.1.0"
+keywords = ["math"]
+# A normal build covers the substantive formalization and the independent Challenge/Solution statement-comparison pair.
+defaultTargets = ["PrimeBHT", "Challenge", "Solution"]
+
+[leanOptions]
+pp.unicode.fun = true # pretty-prints `fun a ↦ b`
+autoImplicit = false
+relaxedAutoImplicit = false
+
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+rev = "v4.35.0"
+
+[[lean_lib]]
+name = "PrimeBHT"
+globs = ["PrimeBHT", "PrimeBHT.+"]
+
+# Comparator pair (comparator.json): the statement of the main theorem with Mathlib imports only (Challenge.lean), and the
+# module re-exporting its proof (Solution.lean).
+[[lean_lib]]
+name = "Challenge"
+roots = ["Challenge"]
+
+[[lean_lib]]
+name = "Solution"
+roots = ["Solution"]
+
+# Included closure of the author's formalization "A Variation Norm Carleson Theorem Along the Primes" (Palomar submission
+# repository https://github.com/anastasiosfragkosmath/Variational-Carleson-Along-the-Primes-Palomar-Submission, commit
+# f0f9299287feeaea25f6b9cedd3e078b4a98f3c7): the modules that the proof of the main theorem imports for the input X3
+# (`PrimeCarleson.Frozen.VonMangoldtSubHeathBrownU3`, imported by `PrimeBHT/Inputs/X3.lean`) and everything they import,
+# copied unchanged and checked by `scripts/check_dependency.py`. Library options are those of that project's lakefile,
+# so that the sources compile exactly as there.
+[[lean_lib]]
+name = "PrimeCarleson"
+globs = ["PrimeCarleson.+"]
+
+[lean_lib.leanOptions]
+pp.unicode.fun = true
+autoImplicit = true
+relaxedAutoImplicit = false
+weak.linter.mathlibStandardSet = true
+maxSynthPendingDepth = 3
+
+# Moduleized ports of openai/math (Apache-2.0); see vendor/provenance/THIRD-PARTY.md.
+[[lean_lib]]
+name = "OAI"
+srcDir = "vendor/openai-math"
+globs = ["OAI.+"]
+
+[lean_lib.leanOptions]
+autoImplicit = false
+maxSynthPendingDepth = 1
+weak.linter.mathlibStandardSet = false
+
+# Slice of fpvandoorn/carleson (Apache-2.0), ported to this toolchain; see vendor/provenance/THIRD-PARTY.md.
+[[lean_lib]]
+name = "Carleson"
+srcDir = "vendor/carleson"
+globs = ["Carleson.+"]
+
+[lean_lib.leanOptions]
+autoImplicit = false
+relaxedAutoImplicit = false
+maxSynthPendingDepth = 1
+weak.linter.mathlibStandardSet = false

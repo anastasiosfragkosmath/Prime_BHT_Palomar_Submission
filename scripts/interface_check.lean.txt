@@ -1,0 +1,162 @@
+/-
+Interface check: the Props the proofs consume equal the frozen statements
+
+Template of the scratch Lean file that `scripts/interface_check.sh` writes to a temporary directory
+and runs with `lake env lean` (from the repo root). It is a `.txt` file outside every `lean_lib`.
+It imports the frozen modules `PrimeBHT.Frozen.{X1, FiniteBV, Key0, MainTheorem}` and (AFTER THE SEAL OF X2, `p_key0` AND
+`t_maintheorem`) their providers `PrimeBHT.Proof.{X2, Key0, MainTheorem}`; the imports live only in this scratch file.
+(Before the seals, X2/Key0/T0 are `DRAFT_SORRY`, nothing may consume them, and only their TYPES are used, through
+`type_of%`; the checks below that mention the providers or the axiom assertions require the sealed state.)
+
+Every `example` below must elaborate; any error makes `lake env lean` exit non-zero, so the script fails.
+The last line prints a sentinel which the script requires, so a truncated file cannot pass silently.
+
+What is checked, and why it suffices:
+
+* X1: `X1Statement` (the Prop in `PrimeBHT/Interface/X1Statement.lean`) is, by `rfl`, literally the type of
+  `PrimeBHT.Statements.x1_bht_smooth`.
+* X2: `X2Statement` (`PrimeBHT/TransferenceAssembly/X2.lean`) is, by `rfl`, literally the type of
+  `PrimeBHT.Statements.t_finiteBV`.
+* Key0: `Key0Statement χ` (`PrimeBHT/FinalGlue/Ops.lean`, a Prop in `χ`, stated with the project's
+  `Kernel.IsCutoff` structure) is NOT literally the type of `p_key0` (which quantifies over `χ` and uses the
+  frozen `Statements.IsCutoff` and `Statements.uOp`), so no `rfl` is possible. Instead: (a) by `rfl`,
+  `Bridge.FrozenKey0Body χ` is exactly the body of the type of `p_key0` (all that follows `IsCutoff χ →`);
+  (b) `Bridge.key0Statement_iff` is a proof that `Key0Statement χ ↔ (Statements.IsCutoff χ → FrozenKey0Body χ)`
+  (it is checked by `exact`, so the two bodies, in particular `uOp`, agree up to definitional unfolding;
+  `Kernel.IsCutoff` versus `Statements.IsCutoff` is the only non-`rfl` step); (c) hence
+  `(∀ χ, Key0Statement χ) ↔ type of p_key0`. A proof of `p_key0` therefore yields exactly `Key0Statement χ`
+  for every `χ`, which is all the assembly consumes.
+* Main theorem: `t_maintheorem_of_inputs hχ hX3 hK hX1` has, by `rfl`, exactly the type of
+  `PrimeBHT.Statements.t_maintheorem`, where the X1 input `hX1` is supplied by `bhtSmooth_of_x1` from
+  `X1Statement` (so the X1 interface feeds the main theorem with no wrapper).
+* Sealed providers (state `SEALED` of X2, Key0, T0): the export of each provider has, by `rfl`, exactly the type of its
+  frozen theorem (`Proof.t_finiteBV : X2Statement`; `Proof.p_key0` with `FrozenKey0Body`; `Proof.t_maintheorem` the frozen
+  type); `#assert_standard_axioms` fails the file unless every sealed export, frozen and provider, depends only on
+  `propext`, `Classical.choice`, `Quot.sound` (a custom axiom or `sorryAx` is rejected).
+-/
+import Lean
+import PrimeBHT.Frozen.X1
+import PrimeBHT.Frozen.FiniteBV
+import PrimeBHT.Frozen.Key0
+import PrimeBHT.Frozen.MainTheorem
+import PrimeBHT.Proof.X2
+import PrimeBHT.Proof.Key0
+import PrimeBHT.Proof.MainTheorem
+import PrimeBHT.Interface.X1Statement
+import PrimeBHT.TransferenceAssembly.X2
+import PrimeBHT.Bridge.Key0
+import PrimeBHT.MainConditional
+import PrimeBHT.Frozen.BhtRealSmooth
+import PrimeBHT.Frozen.TriRestrictedEps
+import PrimeBHT.TimeFrequency.Interp.Hull.Glue
+import PrimeBHT.TimeFrequency.Tile.Dilation
+import PrimeBHT.TimeFrequency.X1.Transfer.Assemble
+import PrimeBHT.Inputs.X3
+import PrimeBHT.Inputs.Main
+import PrimeBHT.Inputs.MainFromM1
+
+set_option autoImplicit false
+
+/-! ### X1 -/
+
+example : PrimeBHT.Interface.X1Statement.X1Statement =
+    (type_of% @PrimeBHT.Statements.x1_bht_smooth) := rfl
+
+/-! ### X2 -/
+
+example : PrimeBHT.TransferenceAssembly.X2Statement =
+    (type_of% @PrimeBHT.Statements.t_finiteBV) := rfl
+
+/-! ### p:key0 (not literally the type: see the header) -/
+
+/-- (a) `FrozenKey0Body χ` is exactly the body of the frozen `p_key0`. -/
+example : (type_of% @PrimeBHT.Statements.p_key0) =
+    (∀ χ : ℝ → ℝ, PrimeBHT.Statements.IsCutoff χ → PrimeBHT.Bridge.FrozenKey0Body χ) := rfl
+
+/-- (b) the project's `Key0Statement χ` is the implication from the frozen cutoff predicate to that body. -/
+example (χ : ℝ → ℝ) : PrimeBHT.FinalGlue.Key0Statement χ ↔
+    (PrimeBHT.Statements.IsCutoff χ → PrimeBHT.Bridge.FrozenKey0Body χ) :=
+  PrimeBHT.Bridge.key0Statement_iff
+
+/-- (c) `p_key0` is equivalent to `Key0Statement χ` for every `χ`. -/
+example : (∀ χ : ℝ → ℝ, PrimeBHT.FinalGlue.Key0Statement χ) ↔
+    (type_of% @PrimeBHT.Statements.p_key0) := by
+  constructor
+  · intro h χ hχ
+    exact (PrimeBHT.Bridge.key0Statement_iff.mp (h χ)) hχ
+  · intro h χ
+    exact PrimeBHT.Bridge.key0Statement_iff.mpr (h χ)
+
+/-! ### The main theorem -/
+
+example {χ : ℝ → ℝ} (hχ : PrimeBHT.Kernel.IsCutoff χ) (hX3 : PrimeBHT.ErrorTerms.X3Statement)
+    (hK : PrimeBHT.FinalGlue.Key0Statement χ)
+    (hX1 : PrimeBHT.Interface.X1Statement.X1Statement) :
+    (type_of% (PrimeBHT.MainConditional.t_maintheorem_of_inputs hχ hX3 hK
+      (PrimeBHT.Interface.X1Statement.bhtSmooth_of_x1 hX1 hχ))) =
+    (type_of% @PrimeBHT.Statements.t_maintheorem) := rfl
+
+/-! ### M2 (real-line anchor, ruling R15): the Prop consumed by Part Z is the frozen type -/
+
+example : PrimeBHT.TimeFrequency.Transfer.M2Prop =
+    (type_of% @PrimeBHT.Statements.bht_real_smooth) := rfl
+
+/-! ### M1(ε) (ruling R16): the Prop consumed by the hull glue is the frozen type -/
+
+example : PrimeBHT.TimeFrequency.Interp.Hull.M1Prop =
+    (type_of% @PrimeBHT.Statements.tri_restricted_eps) := rfl
+
+/-! ### M1Statement (Tile/Dilation.lean) is the body of the frozen M1(ε) theorem -/
+
+example (ε : ℝ) (hε : 0 < ε) (hε' : ε < 1 / 2) :
+    ∃ (N : ℕ) (C : ℝ), 0 < C ∧ PrimeBHT.TimeFrequency.Tile.M1Statement ε N C :=
+  PrimeBHT.Statements.tri_restricted_eps ε hε hε'
+
+/-! ### X3 (sealed theorem of the earlier project, ruling R12) -/
+
+example : PrimeBHT.ErrorTerms.X3Statement =
+    (type_of% @PrimeCarleson.vonMangoldt_sub_heathBrown_U3) := rfl
+
+/-! ### The capstone from X1 and X2 has exactly the frozen main-theorem type -/
+
+example (hX1 : PrimeBHT.Interface.X1Statement.X1Statement)
+    (hX2 : PrimeBHT.TransferenceAssembly.X2Statement) :
+    (type_of% (PrimeBHT.Inputs.t_maintheorem_of_x1_x2 hX1 hX2)) =
+    (type_of% @PrimeBHT.Statements.t_maintheorem) := rfl
+
+example (hM1 : PrimeBHT.TimeFrequency.Interp.Hull.M1Prop)
+    (hX2 : PrimeBHT.TransferenceAssembly.X2Statement) :
+    (type_of% (PrimeBHT.Inputs.t_maintheorem_of_m1_x2 hM1 hX2)) =
+    (type_of% @PrimeBHT.Statements.t_maintheorem) := rfl
+
+/-! ### Sealed providers: the exports have exactly the frozen types (state SEALED of X2, Key0, T0) -/
+
+example : (type_of% @PrimeBHT.Proof.t_finiteBV) = PrimeBHT.TransferenceAssembly.X2Statement := rfl
+example : (type_of% @PrimeBHT.Proof.t_finiteBV) = (type_of% @PrimeBHT.Statements.t_finiteBV) := rfl
+
+example : (type_of% @PrimeBHT.Proof.p_key0) = (type_of% @PrimeBHT.Statements.p_key0) := rfl
+example : (type_of% @PrimeBHT.Proof.p_key0) =
+    (∀ χ : ℝ → ℝ, PrimeBHT.Statements.IsCutoff χ → PrimeBHT.Bridge.FrozenKey0Body χ) := rfl
+
+example : (type_of% @PrimeBHT.Proof.t_maintheorem) = (type_of% @PrimeBHT.Statements.t_maintheorem) := rfl
+
+/-! ### Axioms of the sealed theorems (fails on `sorryAx` or any custom axiom) -/
+
+open Lean Elab Command in
+/-- Fails unless every listed constant depends only on `propext`, `Classical.choice`, `Quot.sound`. -/
+elab "#assert_standard_axioms " ids:ident+ : command => do
+  for id in ids do
+    let n ← liftCoreM (realizeGlobalConstNoOverloadWithInfo id)
+    let axs ← collectAxioms n
+    let bad := axs.filter fun a => !([``propext, ``Classical.choice, ``Quot.sound].contains a)
+    unless bad.isEmpty do
+      throwErrorAt id m!"{n} depends on non-standard axioms {bad.toList}"
+    logInfo m!"{n}: axioms {axs.toList}"
+
+#assert_standard_axioms
+  PrimeBHT.Statements.tri_restricted_eps PrimeBHT.Statements.bht_real_smooth PrimeBHT.Statements.x1_bht_smooth
+  PrimeBHT.Statements.t_finiteBV PrimeBHT.Statements.p_key0 PrimeBHT.Statements.t_maintheorem
+  PrimeBHT.Proof.tri_restricted_eps PrimeBHT.Proof.bht_real_smooth PrimeBHT.Proof.x1_bht_smooth
+  PrimeBHT.Proof.t_finiteBV PrimeBHT.Proof.p_key0 PrimeBHT.Proof.t_maintheorem
+
+#eval IO.println "interface_check: all checks passed"

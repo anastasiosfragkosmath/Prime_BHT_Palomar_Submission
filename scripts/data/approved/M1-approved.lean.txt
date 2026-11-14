@@ -1,0 +1,98 @@
+module
+
+public import Mathlib.Analysis.Fourier.FourierTransform
+public import Mathlib.Analysis.Calculus.IteratedDeriv.Defs
+public import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.Data.Int.ModEq
+public import Mathlib.Data.Fin.VecNotation
+
+@[expose] public noncomputable section
+
+open MeasureTheory
+open scoped ENNReal FourierTransform
+
+set_option autoImplicit false
+
+namespace PrimeBHT.Statements
+
+/-- The validity of the parameters `ν = (a, b, s', α)` of BD26 (L563-566): `21 ≤ a ≤ 30`, `-6 ≤ b ≤ 3`,
+`0 ≤ s' ≤ 9`, `0 ≤ α ≤ 2` (`10 · 10 · 10 · 3 = 3000` values). The ranges are the source's ranges, not extra
+hypotheses. -/
+def TriValid (a b s' α : ℤ) : Prop :=
+  (21 ≤ a ∧ a ≤ 30) ∧ (-6 ≤ b ∧ b ≤ 3) ∧ (0 ≤ s' ∧ s' ≤ 9) ∧ (0 ≤ α ∧ α ≤ 2)
+
+/-- The index set `Idx_ν = {(s, v, ℓ) ∈ ℤ³ : s ≡ s' (mod 10), ℓ ≡ α (mod 3)}` (BD26 L567-571 with all shifts
+`τ_s = 0`). A triple `t = (s, v, ℓ)` is `(t.1, t.2.1, t.2.2)`. -/
+def triIdx (s' α : ℤ) : Set (ℤ × ℤ × ℤ) :=
+  {t | t.1 ≡ s' [ZMOD 10] ∧ t.2.2 ≡ α [ZMOD 3]}
+
+/-- The common time interval `I_t = 2^s [v, v+1)` of the three tiles of the tri-tile `t = (s, v, ℓ)` (BD26
+L573-579 with `τ_s = 0`: all three time intervals coincide). -/
+def timeInt (t : ℤ × ℤ × ℤ) : Set ℝ :=
+  Set.Ico ((2 : ℝ) ^ t.1 * t.2.1) ((2 : ℝ) ^ t.1 * (t.2.1 + 1))
+
+/-- The three numerators `ℓ`, `ℓ - a`, `2ℓ - a - b` of the frequency intervals (slot `k = 0, 1, 2` is the
+source's slot `1, 2, 3`). -/
+def freqNum (a b : ℤ) (t : ℤ × ℤ × ℤ) : Fin 3 → ℤ :=
+  ![t.2.2, t.2.2 - a, 2 * t.2.2 - a - b]
+
+/-- The frequency intervals `ω_{t,k} = 2^{-s} [n_k/3, n_k/3 + 1)` (half-open), with `n_0 = ℓ`, `n_1 = ℓ - a`,
+`n_2 = 2ℓ - a - b` (BD26 L573-579). -/
+def freqInt (a b : ℤ) (k : Fin 3) (t : ℤ × ℤ × ℤ) : Set ℝ :=
+  Set.Ico ((2 : ℝ) ^ (-t.1) * ((freqNum a b t k : ℝ) / 3))
+    ((2 : ℝ) ^ (-t.1) * ((freqNum a b t k : ℝ) / 3 + 1))
+
+/-- The centre `c(S) = (inf S + sup S) / 2` of an interval `S` (BD26 L503 `c(I)`). Only used for bounded
+nondegenerate intervals (`timeInt`, `freqInt`). -/
+def intervalCentre (S : Set ℝ) : ℝ := (sInf S + sSup S) / 2
+
+/-- `φ` is **adapted with exponent `N`** to the pair `(I, ω)` (BD26 L503-509, with the exponent `10` replaced by
+`N`): `φ` is `C¹` and integrable (so that `𝓕 φ`, Mathlib's `Real.fourierIntegral` `𝓕 φ ξ = ∫ e^{-2πiξx} φ(x) dx`,
+which is BD26's convention L499-501, is not a junk value), `𝓕 φ` vanishes outside `ω`, and the demodulated
+function `φ̃(x) = e^{-2πi c(ω) x} φ(x)` satisfies `|φ̃^{(n)}(x)| ≤ |I|^{-n-1/2} (1 + |x - c(I)|/|I|)^{-N}` for
+`n = 0, 1`, all `x`. `|I|` is the Lebesgue measure. -/
+def IsAdapted (N : ℕ) (I ω : Set ℝ) (φ : ℝ → ℂ) : Prop :=
+  ContDiff ℝ 1 φ ∧ Integrable φ ∧ (∀ ξ : ℝ, ξ ∉ ω → 𝓕 φ ξ = 0) ∧
+  ∀ n : ℕ, n ≤ 1 → ∀ x : ℝ,
+    ‖iteratedDeriv n (fun y : ℝ =>
+        Complex.exp (-(2 * (Real.pi : ℂ) * Complex.I * (intervalCentre ω : ℂ) * (y : ℂ))) * φ y) x‖ ≤
+      (volume I).toReal ^ (-(n : ℝ) - 1 / 2) *
+        (1 + |x - intervalCentre I| / (volume I).toReal) ^ (-(N : ℝ))
+
+/-- The pairing `⟨h, φ⟩ = ∫ h conj(φ)` (complex-valued; the form only uses its norm). -/
+def pairing (h φ : ℝ → ℂ) : ℂ := ∫ x, h x * (starRingEnd ℂ) (φ x)
+
+/-- The model form `Λ_P(h₁, h₂, h₃) = ∑_{t ∈ P} |I_t|^{-1/2} ∏_{k} |⟨h_k, φ_{t,k}⟩|` (BD26 L621; real-valued and
+nonnegative). `φ t k` is the packet of the tri-tile `t` in slot `k`. -/
+def triForm (P : Finset (ℤ × ℤ × ℤ)) (φ : ℤ × ℤ × ℤ → Fin 3 → ℝ → ℂ)
+    (h : Fin 3 → ℝ → ℂ) : ℝ :=
+  ∑ t ∈ P, (volume (timeInt t)).toReal ^ (-(1 : ℝ) / 2) * ∏ k, ‖pairing (h k) (φ t k)‖
+
+/-- **M1(ε)** (generalized restricted-type estimate for the unshifted tri-tile form, with an `ε`-loss; NOT the
+corner bound printed in BD26 L625-635). For every `ε ∈ (0, 1/2)` there are `N : ℕ` and `C > 0` (depending on
+`ε` only) such that for every permutation `σ` of the slots and all measurable `E₀, E₁, E₂ ⊆ ℝ` of finite positive
+measure with `|E_{σ0}| ≤ |E_{σ1}| ≤ |E_{σ2}|` there is a measurable `Ẽ ⊆ E_{σ2}` with `2|Ẽ| ≥ |E_{σ2}|` (a major
+subset, depending on `ε, σ, E` only; NOT on `ν`, `P`, the packets or `h`) such that for every parameter `ν = (a, b, s', α)`,
+every finite `P ⊆ Idx_ν`, every packet family adapted with exponent `N` to the tri-tiles of `P`, and every family
+of measurable `h_i` with `|h_i| ≤ 1_{E_i}` (`i ≠ σ 2`) and `|h_{σ2}| ≤ 1_Ẽ`:
+`Λ_P(h) ≤ C |E_{σ0}|^{1-ε} |E_{σ1}|^{1/2} |E_{σ2}|^{-1/2+ε}`. -/
+theorem tri_restricted_eps (ε : ℝ) (hε : 0 < ε) (hε' : ε < 1 / 2) :
+    ∃ (N : ℕ) (C : ℝ), 0 < C ∧
+      ∀ (σ : Equiv.Perm (Fin 3)) (E : Fin 3 → Set ℝ), (∀ i, MeasurableSet (E i)) →
+        (∀ i, 0 < volume (E i) ∧ volume (E i) < ⊤) →
+        volume (E (σ 0)) ≤ volume (E (σ 1)) → volume (E (σ 1)) ≤ volume (E (σ 2)) →
+        ∃ Et : Set ℝ, MeasurableSet Et ∧ Et ⊆ E (σ 2) ∧ volume (E (σ 2)) ≤ 2 * volume Et ∧
+          ∀ (a b s' α : ℤ), TriValid a b s' α →
+          ∀ (P : Finset (ℤ × ℤ × ℤ)), (↑P : Set (ℤ × ℤ × ℤ)) ⊆ triIdx s' α →
+            ∀ φ : ℤ × ℤ × ℤ → Fin 3 → ℝ → ℂ,
+              (∀ t ∈ P, ∀ k, IsAdapted N (timeInt t) (freqInt a b k t) (φ t k)) →
+              ∀ h : Fin 3 → ℝ → ℂ, (∀ i, Measurable (h i)) →
+                (∀ i, i ≠ σ 2 → ∀ x, ‖h i x‖ ≤ (E i).indicator (1 : ℝ → ℝ) x) →
+                (∀ x, ‖h (σ 2) x‖ ≤ Et.indicator (1 : ℝ → ℝ) x) →
+                triForm P φ h ≤ C * (volume (E (σ 0))).toReal ^ (1 - ε) *
+                  (volume (E (σ 1))).toReal ^ ((1 : ℝ) / 2) *
+                  (volume (E (σ 2))).toReal ^ (-(1 : ℝ) / 2 + ε) :=
+  sorry
+
+end PrimeBHT.Statements

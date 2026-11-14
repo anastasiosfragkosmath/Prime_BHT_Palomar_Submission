@@ -1,0 +1,1113 @@
+{
+  "schema_version": 1,
+  "manifest_state": "AUTHOR_APPROVED",
+  "seal_limits": {
+    "max_body_lines": 3,
+    "max_body_bytes": 240
+  },
+  "anchors": [
+    {
+      "id": "def_primeBHT_v1",
+      "kind": "definition",
+      "author_approval": {
+        "approved_by": "Anastasios Fragkos",
+        "approved_at": "2026-11-09",
+        "approval_ref": "docs/RULINGS.md#R9",
+        "approval_version": "1"
+      },
+      "source": {
+        "revision": "sha256:c1ac7b31e29e878299f841d8cc4a0f3dbdd8f2ba96e5a886630b62f3eba9c5a4",
+        "range": "source-paper/Prime_BHT_final.tex:151-153,172,342-343"
+      },
+      "contract": {
+        "id": "PrimeBHT.primeBHT",
+        "version": "1"
+      },
+      "path": "PrimeBHT/Frozen/PrimeBHT.lean",
+      "export": "PrimeBHT.Statements.primeBHT",
+      "split_policy": {
+        "source_group": "PrimeBHT.primeBHT",
+        "mode": "NOT_SPLIT",
+        "ruling_ref": "docs/RULINGS.md#R9"
+      },
+      "abi_sha256": "946d241a3d54c09c86b50ae11537ff0d9d27356e9cb33b65553a01508d29e06e",
+      "definition_closure": [],
+      "state": "SEALED",
+      "full_file_sha256": "94512055fa3e95914f60032ff1ce3b1f9b95ce2ec14c299a5ebb73b5a153f5d8"
+    },
+    {
+      "id": "t_maintheorem_v1",
+      "kind": "theorem",
+      "author_approval": {
+        "approved_by": "Anastasios Fragkos",
+        "approved_at": "2026-11-09",
+        "approval_ref": "docs/RULINGS.md#R9",
+        "approval_version": "1"
+      },
+      "source": {
+        "revision": "sha256:c1ac7b31e29e878299f841d8cc4a0f3dbdd8f2ba96e5a886630b62f3eba9c5a4",
+        "range": "source-paper/Prime_BHT_final.tex:175-179"
+      },
+      "contract": {
+        "id": "PrimeBHT.t_maintheorem",
+        "version": "1"
+      },
+      "path": "PrimeBHT/Frozen/MainTheorem.lean",
+      "export": "PrimeBHT.Statements.t_maintheorem",
+      "implementation": {
+        "module": "PrimeBHT.Proof.MainTheorem",
+        "export": "PrimeBHT.Proof.t_maintheorem"
+      },
+      "split_policy": {
+        "source_group": "PrimeBHT.t_maintheorem",
+        "mode": "NOT_SPLIT",
+        "ruling_ref": "docs/RULINGS.md#R9"
+      },
+      "abi_sha256": "6643f859960d6f8ccc04d1cd0a09117b30b598d8bc03e8cf91a0e10562414a72",
+      "definition_closure": [
+        {
+          "path": "PrimeBHT/Frozen/PrimeBHT.lean",
+          "sha256": "94512055fa3e95914f60032ff1ce3b1f9b95ce2ec14c299a5ebb73b5a153f5d8"
+        }
+      ],
+      "state": "SEALED",
+      "prefix_sha256": "bbd16c5b779610d36de11c9b7670786c2662e8221b642e971d6d56f6ca66ee56",
+      "suffix_sha256": "b1131f4d769ab4a7c42346dd74e16e2cdfec62d4d2007b2f7eb91e6d8ea8e6e0",
+      "draft_allowlist": {
+        "frozen_paths": [],
+        "audit_paths": []
+      }
+    },
+    {
+      "id": "def_e_v1",
+      "kind": "definition",
+      "author_approval": {
+        "approved_by": "Anastasios Fragkos",
+        "approved_at": "2026-11-09",
+        "approval_ref": "docs/RULINGS.md#R10",
+        "approval_version": "1"
+      },
+      "source": {
+        "revision": "sha256:6763eac797d5dd0e8232b3126fc7eef02ad949606b3c6c615eecc4b5456a5c1e",
+        "range": "sources/Variational_Carleson.tex:552"
+      },
+      "contract": {
+        "id": "VariationalCarleson.e",
+        "version": "1"
+      },
+      "path": "PrimeCarleson/Frozen/Exp.lean",
+      "export": "PrimeCarleson.e",
+      "split_policy": {
+        "source_group": "VariationalCarleson.e",
+        "mode": "NOT_SPLIT",
+        "ruling_ref": "docs/RULINGS.md#R10"
+      },
+      "abi_sha256": "ec2cb07e8346e4a7cbcf226e66327899f3a3abf7c0567696e2510a0b3cae25fe",
+      "definition_closure": [],
+      "state": "SEALED",
+      "full_file_sha256": "bcc76e9ebd83a7bc1f3385929d8f8a2465336bd4aa44e7a4d75b9fcf89d20278"
+    },
+    {
+      "id": "def_ramanujanSum_v1",
+      "kind": "definition",
+      "author_approval": {
+        "approved_by": "Anastasios Fragkos",
+        "approved_at": "2026-11-09",
+        "approval_ref": "docs/RULINGS.md#R10",
+        "approval_version": "1"
+      },
+      "source": {
+        "revision": "sha256:6763eac797d5dd0e8232b3126fc7eef02ad949606b3c6c615eecc4b5456a5c1e",
+        "range": "sources/Variational_Carleson.tex:587-590"
+      },
+      "contract": {
+        "id": "VariationalCarleson.ramanujanSum",
+        "version": "1"
+      },
+      "path": "PrimeCarleson/Frozen/RamanujanSum.lean",
+      "export": "PrimeCarleson.ramanujanSum",
+      "split_policy": {
+        "source_group": "VariationalCarleson.ramanujanSum",
+        "mode": "NOT_SPLIT",
+        "ruling_ref": "docs/RULINGS.md#R10"
+      },
+      "abi_sha256": "0b3be1f716169680bd7c3e623871e56207db3236381caac694740382a7fdaa56",
+      "definition_closure": [
+        {
+          "path": "PrimeCarleson/Frozen/Exp.lean",
+          "sha256": "bcc76e9ebd83a7bc1f3385929d8f8a2465336bd4aa44e7a4d75b9fcf89d20278"
+        }
+      ],
+      "state": "SEALED",
+      "full_file_sha256": "488713791a049e0575c980da427644f41235b06a8d915d1d9b4a767621ec9b94"
+    },
+    {
+      "id": "def_blockWeight_v1",
+      "kind": "definition",
+      "author_approval": {
+        "approved_by": "Anastasios Fragkos",
+        "approved_at": "2026-11-09",
+        "approval_ref": "docs/RULINGS.md#R10",
+        "approval_version": "1"
+      },
+      "source": {
+        "revision": "sha256:6763eac797d5dd0e8232b3126fc7eef02ad949606b3c6c615eecc4b5456a5c1e",
+        "range": "sources/Variational_Carleson.tex:600-607"
+      },
+      "contract": {
+        "id": "VariationalCarleson.blockWeight",
+        "version": "1"
+      },
+      "path": "PrimeCarleson/Frozen/BlockWeight.lean",
+      "export": "PrimeCarleson.blockWeight",
+      "split_policy": {
+        "source_group": "VariationalCarleson.blockWeight",
+        "mode": "NOT_SPLIT",
+        "ruling_ref": "docs/RULINGS.md#R10"
+      },
+      "abi_sha256": "5632c3fdaac92f55639a97196d4c8616033a179851dc38b62770fbc24555d55a",
+      "definition_closure": [
+        {
+          "path": "PrimeCarleson/Frozen/RamanujanSum.lean",
+          "sha256": "488713791a049e0575c980da427644f41235b06a8d915d1d9b4a767621ec9b94"
+        },
+        {
+          "path": "PrimeCarleson/Frozen/Exp.lean",
+          "sha256": "bcc76e9ebd83a7bc1f3385929d8f8a2465336bd4aa44e7a4d75b9fcf89d20278"
+        }
+      ],
+      "state": "SEALED",
+      "full_file_sha256": "ede45457e4ab25ba4e90c803debd824047204c2ee81bd3e28da9d5fe6bb624b7"
+    },
+    {
+      "id": "def_IsCutoff_v1",
+      "kind": "definition",
+      "author_approval": {
+        "approved_by": "Anastasios Fragkos",
+        "approved_at": "2026-11-09",
+        "approval_ref": "docs/RULINGS.md#R10",
+        "approval_version": "1"
+      },
+      "source": {
+        "revision": "sha256:c1ac7b31e29e878299f841d8cc4a0f3dbdd8f2ba96e5a886630b62f3eba9c5a4",
+        "range": "source-paper/Prime_BHT_final.tex:372-376"
+      },
+      "contract": {
+        "id": "PrimeBHT.IsCutoff",
+        "version": "1"
+      },
+      "path": "PrimeBHT/Frozen/IsCutoff.lean",
+      "export": "PrimeBHT.Statements.IsCutoff",
+      "split_policy": {
+        "source_group": "PrimeBHT.IsCutoff",
+        "mode": "NOT_SPLIT",
+        "ruling_ref": "docs/RULINGS.md#R10"
+      },
+      "abi_sha256": "59d826565d59b3ec0387a4240353fc35fa4413942ffa30482af067967f7dab96",
+      "definition_closure": [],
+      "state": "SEALED",
+      "full_file_sha256": "d899dc213d72096b539d86200b62f858487141976db0005382c0dc650199a01a"
+    },
+    {
+      "id": "def_psi_v1",
+      "kind": "definition",
+      "author_approval": {
+        "approved_by": "Anastasios Fragkos",
+        "approved_at": "2026-11-09",
+        "approval_ref": "docs/RULINGS.md#R10",
+        "approval_version": "1"
+      },
+      "source": {
+        "revision": "sha256:c1ac7b31e29e878299f841d8cc4a0f3dbdd8f2ba96e5a886630b62f3eba9c5a4",
+        "range": "source-paper/Prime_BHT_final.tex:378"
+      },
+      "contract": {
+        "id": "PrimeBHT.psi",
+        "version": "1"
+      },
+      "path": "PrimeBHT/Frozen/Psi.lean",
+      "export": "PrimeBHT.Statements.psi",
+      "split_policy": {
+        "source_group": "PrimeBHT.psi",
+        "mode": "NOT_SPLIT",
+        "ruling_ref": "docs/RULINGS.md#R10"
+      },
+      "abi_sha256": "20b9245ada03f0f0dbb35dfcbf5cde2309bb1a9b474cb0b7e82b5027426ee0bf",
+      "definition_closure": [],
+      "state": "SEALED",
+      "full_file_sha256": "c2e933b44c4712d3e221fb0f77d2913765fb728c54ab5ccdf9b15de1738d1f3b"
+    },
+    {
+      "id": "def_psiK_v1",
+      "kind": "definition",
+      "author_approval": {
+        "approved_by": "Anastasios Fragkos",
+        "approved_at": "2026-11-09",
+        "approval_ref": "docs/RULINGS.md#R10",
+        "approval_version": "1"
+      },
+      "source": {
+        "revision": "sha256:c1ac7b31e29e878299f841d8cc4a0f3dbdd8f2ba96e5a886630b62f3eba9c5a4",
+        "range": "source-paper/Prime_BHT_final.tex:383"
+      },
+      "contract": {
+        "id": "PrimeBHT.psiK",
+        "version": "1"
+      },
+      "path": "PrimeBHT/Frozen/PsiK.lean",
+      "export": "PrimeBHT.Statements.psiK",
+      "split_policy": {
+        "source_group": "PrimeBHT.psiK",
+        "mode": "NOT_SPLIT",
+        "ruling_ref": "docs/RULINGS.md#R10"
+      },
+      "abi_sha256": "5c7a3cc1d43a719f6a0dd97e3dce84132a46a5252f94c80ec6eaa6c1dfa55030",
+      "definition_closure": [
+        {
+          "path": "PrimeBHT/Frozen/Psi.lean",
+          "sha256": "c2e933b44c4712d3e221fb0f77d2913765fb728c54ab5ccdf9b15de1738d1f3b"
+        }
+      ],
+      "state": "SEALED",
+      "full_file_sha256": "4a41cb57910218ce9fe39ffc08e93e5606527e0dc1454756795fb760c8127502"
+    },
+    {
+      "id": "def_uOp_v1",
+      "kind": "definition",
+      "author_approval": {
+        "approved_by": "Anastasios Fragkos",
+        "approved_at": "2026-11-09",
+        "approval_ref": "docs/RULINGS.md#R10",
+        "approval_version": "1"
+      },
+      "source": {
+        "revision": "sha256:c1ac7b31e29e878299f841d8cc4a0f3dbdd8f2ba96e5a886630b62f3eba9c5a4",
+        "range": "source-paper/Prime_BHT_final.tex:620-627,678"
+      },
+      "contract": {
+        "id": "PrimeBHT.uOp",
+        "version": "1"
+      },
+      "path": "PrimeBHT/Frozen/UOp.lean",
+      "export": "PrimeBHT.Statements.uOp",
+      "split_policy": {
+        "source_group": "PrimeBHT.uOp",
+        "mode": "NOT_SPLIT",
+        "ruling_ref": "docs/RULINGS.md#R10"
+      },
+      "abi_sha256": "de5c8c82e7c385787f398c9bf3cf5e80093b7a027ec0c7be0f878b1ed61c0aea",
+      "definition_closure": [
+        {
+          "path": "PrimeBHT/Frozen/PsiK.lean",
+          "sha256": "4a41cb57910218ce9fe39ffc08e93e5606527e0dc1454756795fb760c8127502"
+        },
+        {
+          "path": "PrimeBHT/Frozen/Psi.lean",
+          "sha256": "c2e933b44c4712d3e221fb0f77d2913765fb728c54ab5ccdf9b15de1738d1f3b"
+        },
+        {
+          "path": "PrimeCarleson/Frozen/BlockWeight.lean",
+          "sha256": "ede45457e4ab25ba4e90c803debd824047204c2ee81bd3e28da9d5fe6bb624b7"
+        },
+        {
+          "path": "PrimeCarleson/Frozen/RamanujanSum.lean",
+          "sha256": "488713791a049e0575c980da427644f41235b06a8d915d1d9b4a767621ec9b94"
+        },
+        {
+          "path": "PrimeCarleson/Frozen/Exp.lean",
+          "sha256": "bcc76e9ebd83a7bc1f3385929d8f8a2465336bd4aa44e7a4d75b9fcf89d20278"
+        }
+      ],
+      "state": "SEALED",
+      "full_file_sha256": "56b66b57ca29db1fa45b238418d237ed035bf7b8d3a8b24490fe2b8298f96f68"
+    },
+    {
+      "id": "p_key0_v1",
+      "kind": "theorem",
+      "author_approval": {
+        "approved_by": "Anastasios Fragkos",
+        "approved_at": "2026-11-09",
+        "approval_ref": "docs/RULINGS.md#R10",
+        "approval_version": "1"
+      },
+      "source": {
+        "revision": "sha256:c1ac7b31e29e878299f841d8cc4a0f3dbdd8f2ba96e5a886630b62f3eba9c5a4",
+        "range": "source-paper/Prime_BHT_final.tex:705-720"
+      },
+      "contract": {
+        "id": "PrimeBHT.p_key0",
+        "version": "1"
+      },
+      "path": "PrimeBHT/Frozen/Key0.lean",
+      "export": "PrimeBHT.Statements.p_key0",
+      "implementation": {
+        "module": "PrimeBHT.Proof.Key0",
+        "export": "PrimeBHT.Proof.p_key0"
+      },
+      "split_policy": {
+        "source_group": "PrimeBHT.p_key0",
+        "mode": "NOT_SPLIT",
+        "ruling_ref": "docs/RULINGS.md#R10"
+      },
+      "abi_sha256": "13d26000fd89fcc057f50136a641fc5947fdac7d122f59409dad5b02270690e2",
+      "definition_closure": [
+        {
+          "path": "PrimeBHT/Frozen/IsCutoff.lean",
+          "sha256": "d899dc213d72096b539d86200b62f858487141976db0005382c0dc650199a01a"
+        },
+        {
+          "path": "PrimeBHT/Frozen/UOp.lean",
+          "sha256": "56b66b57ca29db1fa45b238418d237ed035bf7b8d3a8b24490fe2b8298f96f68"
+        },
+        {
+          "path": "PrimeBHT/Frozen/PsiK.lean",
+          "sha256": "4a41cb57910218ce9fe39ffc08e93e5606527e0dc1454756795fb760c8127502"
+        },
+        {
+          "path": "PrimeBHT/Frozen/Psi.lean",
+          "sha256": "c2e933b44c4712d3e221fb0f77d2913765fb728c54ab5ccdf9b15de1738d1f3b"
+        },
+        {
+          "path": "PrimeCarleson/Frozen/BlockWeight.lean",
+          "sha256": "ede45457e4ab25ba4e90c803debd824047204c2ee81bd3e28da9d5fe6bb624b7"
+        },
+        {
+          "path": "PrimeCarleson/Frozen/RamanujanSum.lean",
+          "sha256": "488713791a049e0575c980da427644f41235b06a8d915d1d9b4a767621ec9b94"
+        },
+        {
+          "path": "PrimeCarleson/Frozen/Exp.lean",
+          "sha256": "bcc76e9ebd83a7bc1f3385929d8f8a2465336bd4aa44e7a4d75b9fcf89d20278"
+        }
+      ],
+      "state": "SEALED",
+      "prefix_sha256": "53afe5d45ab931a3d1f089ff8c53a99b411c8178d9adf64d04431af3e5e85221",
+      "suffix_sha256": "b1131f4d769ab4a7c42346dd74e16e2cdfec62d4d2007b2f7eb91e6d8ea8e6e0",
+      "draft_allowlist": {
+        "frozen_paths": [],
+        "audit_paths": []
+      }
+    },
+    {
+      "id": "def_bhtTrunc_v1",
+      "kind": "definition",
+      "author_approval": {
+        "approved_by": "Anastasios Fragkos",
+        "approved_at": "2026-11-09",
+        "approval_ref": "docs/RULINGS.md#R11",
+        "approval_version": "1"
+      },
+      "source": {
+        "revision": "sha256:c1ac7b31e29e878299f841d8cc4a0f3dbdd8f2ba96e5a886630b62f3eba9c5a4",
+        "range": "source-paper/Prime_BHT_final.tex:261-264,657-661"
+      },
+      "contract": {
+        "id": "PrimeBHT.bhtTrunc",
+        "version": "1"
+      },
+      "path": "PrimeBHT/Frozen/BhtTrunc.lean",
+      "export": "PrimeBHT.Statements.bhtTrunc",
+      "split_policy": {
+        "source_group": "PrimeBHT.bhtTrunc",
+        "mode": "NOT_SPLIT",
+        "ruling_ref": "docs/RULINGS.md#R11"
+      },
+      "abi_sha256": "1abc6077f3b756e41065f6f8d5773edcd71076040dd03aaa6877e1a1bda33d1b",
+      "definition_closure": [],
+      "state": "SEALED",
+      "full_file_sha256": "31295571d86c6ff557021f142d95a918e492259bc26d9f761f8b7ab6f63a16e0"
+    },
+    {
+      "id": "def_yNorm_v1",
+      "kind": "definition",
+      "author_approval": {
+        "approved_by": "Anastasios Fragkos",
+        "approved_at": "2026-11-09",
+        "approval_ref": "docs/RULINGS.md#R11",
+        "approval_version": "1"
+      },
+      "source": {
+        "revision": "sha256:c1ac7b31e29e878299f841d8cc4a0f3dbdd8f2ba96e5a886630b62f3eba9c5a4",
+        "range": "source-paper/Prime_BHT_final.tex:925-928"
+      },
+      "contract": {
+        "id": "PrimeBHT.yNorm",
+        "version": "1"
+      },
+      "path": "PrimeBHT/Frozen/YNorm.lean",
+      "export": "PrimeBHT.Statements.yNorm",
+      "split_policy": {
+        "source_group": "PrimeBHT.yNorm",
+        "mode": "NOT_SPLIT",
+        "ruling_ref": "docs/RULINGS.md#R11"
+      },
+      "abi_sha256": "e9be5e50e0974a2505c94fc0d69f19e220234fe00999ac9ffd075fc39f32117b",
+      "definition_closure": [],
+      "state": "SEALED",
+      "full_file_sha256": "6c91a3ac2b373fa3b12f7007af853a7c4c5f4af0f89f889c4091000a138228b8"
+    },
+    {
+      "id": "def_tensorFun_v1",
+      "kind": "definition",
+      "author_approval": {
+        "approved_by": "Anastasios Fragkos",
+        "approved_at": "2026-11-09",
+        "approval_ref": "docs/RULINGS.md#R11",
+        "approval_version": "1"
+      },
+      "source": {
+        "revision": "sha256:c1ac7b31e29e878299f841d8cc4a0f3dbdd8f2ba96e5a886630b62f3eba9c5a4",
+        "range": "source-paper/Prime_BHT_final.tex:956-960"
+      },
+      "contract": {
+        "id": "PrimeBHT.tensorFun",
+        "version": "1"
+      },
+      "path": "PrimeBHT/Frozen/TensorFun.lean",
+      "export": "PrimeBHT.Statements.tensorFun",
+      "split_policy": {
+        "source_group": "PrimeBHT.tensorFun",
+        "mode": "NOT_SPLIT",
+        "ruling_ref": "docs/RULINGS.md#R11"
+      },
+      "abi_sha256": "509a73052eaf9ff452fa23cfdb397c6c6e28c69f0ff63a67aef146dba756f408",
+      "definition_closure": [],
+      "state": "SEALED",
+      "full_file_sha256": "34f7d631492a12b9e0c66956c3f40495d72b3c3e8b1c04851a55e81eff22c6e0"
+    },
+    {
+      "id": "def_tensorFourier_v1",
+      "kind": "definition",
+      "author_approval": {
+        "approved_by": "Anastasios Fragkos",
+        "approved_at": "2026-11-09",
+        "approval_ref": "docs/RULINGS.md#R11",
+        "approval_version": "1"
+      },
+      "source": {
+        "revision": "sha256:c1ac7b31e29e878299f841d8cc4a0f3dbdd8f2ba96e5a886630b62f3eba9c5a4",
+        "range": "source-paper/Prime_BHT_final.tex:968-971"
+      },
+      "contract": {
+        "id": "PrimeBHT.tensorFourier",
+        "version": "1"
+      },
+      "path": "PrimeBHT/Frozen/TensorFourier.lean",
+      "export": "PrimeBHT.Statements.tensorFourier",
+      "split_policy": {
+        "source_group": "PrimeBHT.tensorFourier",
+        "mode": "NOT_SPLIT",
+        "ruling_ref": "docs/RULINGS.md#R11"
+      },
+      "abi_sha256": "a4173900c83609077c8389c9bf6428cb1349ca8fb825bfffc1295edd33422532",
+      "definition_closure": [],
+      "state": "SEALED",
+      "full_file_sha256": "17eb1effc2eac4f0c5242a4a92a1b74ecd9f5171f7e984a0940aa1160404d9a4"
+    },
+    {
+      "id": "def_multiplierForm_v1",
+      "kind": "definition",
+      "author_approval": {
+        "approved_by": "Anastasios Fragkos",
+        "approved_at": "2026-11-09",
+        "approval_ref": "docs/RULINGS.md#R11",
+        "approval_version": "1"
+      },
+      "source": {
+        "revision": "sha256:c1ac7b31e29e878299f841d8cc4a0f3dbdd8f2ba96e5a886630b62f3eba9c5a4",
+        "range": "source-paper/Prime_BHT_final.tex:958-965"
+      },
+      "contract": {
+        "id": "PrimeBHT.multiplierForm",
+        "version": "1"
+      },
+      "path": "PrimeBHT/Frozen/MultiplierForm.lean",
+      "export": "PrimeBHT.Statements.multiplierForm",
+      "split_policy": {
+        "source_group": "PrimeBHT.multiplierForm",
+        "mode": "NOT_SPLIT",
+        "ruling_ref": "docs/RULINGS.md#R11"
+      },
+      "abi_sha256": "ca9a89d0bcca0a7af8574c629864ee24b4ef49ebb5ea140280a9d68ebae1f270",
+      "definition_closure": [
+        {
+          "path": "PrimeBHT/Frozen/TensorFourier.lean",
+          "sha256": "17eb1effc2eac4f0c5242a4a92a1b74ecd9f5171f7e984a0940aa1160404d9a4"
+        }
+      ],
+      "state": "SEALED",
+      "full_file_sha256": "45a93bef55da7729ac3ee9392032334f7b3f2871ecd3277197582ee4ad7b1318"
+    },
+    {
+      "id": "x1_bht_smooth_v1",
+      "kind": "theorem",
+      "author_approval": {
+        "approved_by": "Anastasios Fragkos",
+        "approved_at": "2026-11-09",
+        "approval_ref": "docs/RULINGS.md#R11",
+        "approval_version": "1"
+      },
+      "source": {
+        "revision": "sha256:c1ac7b31e29e878299f841d8cc4a0f3dbdd8f2ba96e5a886630b62f3eba9c5a4",
+        "range": "source-paper/Prime_BHT_final.tex:246-264,646-671"
+      },
+      "contract": {
+        "id": "PrimeBHT.x1_bht_smooth",
+        "version": "1"
+      },
+      "path": "PrimeBHT/Frozen/X1.lean",
+      "export": "PrimeBHT.Statements.x1_bht_smooth",
+      "implementation": {
+        "module": "PrimeBHT.Proof.X1",
+        "export": "PrimeBHT.Proof.x1_bht_smooth"
+      },
+      "split_policy": {
+        "source_group": "PrimeBHT.x1_bht_smooth",
+        "mode": "NOT_SPLIT",
+        "ruling_ref": "docs/RULINGS.md#R11"
+      },
+      "abi_sha256": "ea9e7c42c2242c9d52e5feeae40831b48f7ab0a587880afa015d295f7d6c6ec9",
+      "definition_closure": [
+        {
+          "path": "PrimeBHT/Frozen/IsCutoff.lean",
+          "sha256": "d899dc213d72096b539d86200b62f858487141976db0005382c0dc650199a01a"
+        },
+        {
+          "path": "PrimeBHT/Frozen/BhtTrunc.lean",
+          "sha256": "31295571d86c6ff557021f142d95a918e492259bc26d9f761f8b7ab6f63a16e0"
+        }
+      ],
+      "state": "SEALED",
+      "prefix_sha256": "8ee8f3944e8d5a6bb20c86bc8f0f8de7ad339a1778854d197c55a8c8cc16fb5a",
+      "suffix_sha256": "b1131f4d769ab4a7c42346dd74e16e2cdfec62d4d2007b2f7eb91e6d8ea8e6e0",
+      "draft_allowlist": {
+        "frozen_paths": [],
+        "audit_paths": []
+      }
+    },
+    {
+      "id": "t_finiteBV_v1",
+      "kind": "theorem",
+      "author_approval": {
+        "approved_by": "Anastasios Fragkos",
+        "approved_at": "2026-11-09",
+        "approval_ref": "docs/RULINGS.md#R11",
+        "approval_version": "1"
+      },
+      "source": {
+        "revision": "sha256:c1ac7b31e29e878299f841d8cc4a0f3dbdd8f2ba96e5a886630b62f3eba9c5a4",
+        "range": "source-paper/Prime_BHT_final.tex:925-1020"
+      },
+      "contract": {
+        "id": "PrimeBHT.t_finiteBV",
+        "version": "1"
+      },
+      "path": "PrimeBHT/Frozen/FiniteBV.lean",
+      "export": "PrimeBHT.Statements.t_finiteBV",
+      "implementation": {
+        "module": "PrimeBHT.Proof.X2",
+        "export": "PrimeBHT.Proof.t_finiteBV"
+      },
+      "split_policy": {
+        "source_group": "PrimeBHT.t_finiteBV",
+        "mode": "NOT_SPLIT",
+        "ruling_ref": "docs/RULINGS.md#R11"
+      },
+      "abi_sha256": "85c17b9445d12812a4442b7d8012d5366ca11eb3c7c0dd1c3f8ad830d89d5d92",
+      "definition_closure": [
+        {
+          "path": "PrimeBHT/Frozen/YNorm.lean",
+          "sha256": "6c91a3ac2b373fa3b12f7007af853a7c4c5f4af0f89f889c4091000a138228b8"
+        },
+        {
+          "path": "PrimeBHT/Frozen/TensorFun.lean",
+          "sha256": "34f7d631492a12b9e0c66956c3f40495d72b3c3e8b1c04851a55e81eff22c6e0"
+        },
+        {
+          "path": "PrimeBHT/Frozen/TensorFourier.lean",
+          "sha256": "17eb1effc2eac4f0c5242a4a92a1b74ecd9f5171f7e984a0940aa1160404d9a4"
+        },
+        {
+          "path": "PrimeBHT/Frozen/MultiplierForm.lean",
+          "sha256": "45a93bef55da7729ac3ee9392032334f7b3f2871ecd3277197582ee4ad7b1318"
+        }
+      ],
+      "state": "SEALED",
+      "prefix_sha256": "af477597752a5a17ffaf19605ff3c87eed10439424d0d38b3a765134a6626756",
+      "suffix_sha256": "b1131f4d769ab4a7c42346dd74e16e2cdfec62d4d2007b2f7eb91e6d8ea8e6e0",
+      "draft_allowlist": {
+        "frozen_paths": [],
+        "audit_paths": []
+      }
+    },
+    {
+      "id": "def_bhtKernelR_v1",
+      "kind": "definition",
+      "author_approval": {
+        "approved_by": "Anastasios Fragkos",
+        "approved_at": "2026-11-09",
+        "approval_ref": "docs/RULINGS.md#R15",
+        "approval_version": "1"
+      },
+      "source": {
+        "revision": "sha256:c1ac7b31e29e878299f841d8cc4a0f3dbdd8f2ba96e5a886630b62f3eba9c5a4",
+        "range": "source-paper/Prime_BHT_final.tex:657-661"
+      },
+      "contract": {
+        "id": "PrimeBHT.bhtKernelR",
+        "version": "1"
+      },
+      "path": "PrimeBHT/Frozen/BhtKernelR.lean",
+      "export": "PrimeBHT.Statements.bhtKernelR",
+      "split_policy": {
+        "source_group": "PrimeBHT.bhtKernelR",
+        "mode": "NOT_SPLIT",
+        "ruling_ref": "docs/RULINGS.md#R15"
+      },
+      "abi_sha256": "933231a94cec01b41e396e25e798ee986d70002d7a9caa6954219860fcd66b42",
+      "definition_closure": [],
+      "state": "SEALED",
+      "full_file_sha256": "4129c2d78351b3dba2e3856c3ab2b20cccc0dc2a3816ac3bd2f1cf662f57c7e0"
+    },
+    {
+      "id": "def_bhtOpR_v1",
+      "kind": "definition",
+      "author_approval": {
+        "approved_by": "Anastasios Fragkos",
+        "approved_at": "2026-11-09",
+        "approval_ref": "docs/RULINGS.md#R15",
+        "approval_version": "1"
+      },
+      "source": {
+        "revision": "sha256:74fd5ab23904332e4833b9824c3e73645f5a12937ee5a10ff2298a18eeb0fef0",
+        "range": "sources/external/BD26/src/arxivv1.tex:375-387"
+      },
+      "contract": {
+        "id": "PrimeBHT.bhtOpR",
+        "version": "1"
+      },
+      "path": "PrimeBHT/Frozen/BhtOpR.lean",
+      "export": "PrimeBHT.Statements.bhtOpR",
+      "split_policy": {
+        "source_group": "PrimeBHT.bhtOpR",
+        "mode": "NOT_SPLIT",
+        "ruling_ref": "docs/RULINGS.md#R15"
+      },
+      "abi_sha256": "433bc097476fadade8019695f1025a68d08315523db2a464898c8950aede1917",
+      "definition_closure": [
+        {
+          "path": "PrimeBHT/Frozen/BhtKernelR.lean",
+          "sha256": "4129c2d78351b3dba2e3856c3ab2b20cccc0dc2a3816ac3bd2f1cf662f57c7e0"
+        }
+      ],
+      "state": "SEALED",
+      "full_file_sha256": "8166ca90ca5d8938f2b53ea51e75e86bda2af8c8825f1f47e96b4ca9d679f138"
+    },
+    {
+      "id": "bht_real_smooth_v1",
+      "kind": "theorem",
+      "author_approval": {
+        "approved_by": "Anastasios Fragkos",
+        "approved_at": "2026-11-09",
+        "approval_ref": "docs/RULINGS.md#R15",
+        "approval_version": "1"
+      },
+      "source": {
+        "revision": "sha256:74fd5ab23904332e4833b9824c3e73645f5a12937ee5a10ff2298a18eeb0fef0",
+        "range": "sources/external/BD26/src/arxivv1.tex:170-181,375-387"
+      },
+      "contract": {
+        "id": "PrimeBHT.bht_real_smooth",
+        "version": "1"
+      },
+      "path": "PrimeBHT/Frozen/BhtRealSmooth.lean",
+      "export": "PrimeBHT.Statements.bht_real_smooth",
+      "implementation": {
+        "module": "PrimeBHT.Proof.M2",
+        "export": "PrimeBHT.Proof.bht_real_smooth"
+      },
+      "split_policy": {
+        "source_group": "PrimeBHT.bht_real_smooth",
+        "mode": "NOT_SPLIT",
+        "ruling_ref": "docs/RULINGS.md#R15"
+      },
+      "abi_sha256": "c455300af2f84dfdcd164dd56ce29a8f2b3659e9fc209f74c84087470a578b69",
+      "definition_closure": [
+        {
+          "path": "PrimeBHT/Frozen/IsCutoff.lean",
+          "sha256": "d899dc213d72096b539d86200b62f858487141976db0005382c0dc650199a01a"
+        },
+        {
+          "path": "PrimeBHT/Frozen/BhtOpR.lean",
+          "sha256": "8166ca90ca5d8938f2b53ea51e75e86bda2af8c8825f1f47e96b4ca9d679f138"
+        },
+        {
+          "path": "PrimeBHT/Frozen/BhtKernelR.lean",
+          "sha256": "4129c2d78351b3dba2e3856c3ab2b20cccc0dc2a3816ac3bd2f1cf662f57c7e0"
+        }
+      ],
+      "state": "SEALED",
+      "prefix_sha256": "5610418472f51f14dfbcb00f9eeae62bd022125c99095b892cb0a23c5b616817",
+      "suffix_sha256": "b1131f4d769ab4a7c42346dd74e16e2cdfec62d4d2007b2f7eb91e6d8ea8e6e0",
+      "draft_allowlist": {
+        "frozen_paths": [],
+        "audit_paths": []
+      }
+    },
+    {
+      "id": "def_TriValid_v1",
+      "kind": "definition",
+      "author_approval": {
+        "approved_by": "Anastasios Fragkos",
+        "approved_at": "2026-11-09",
+        "approval_ref": "docs/RULINGS.md#R16",
+        "approval_version": "1"
+      },
+      "source": {
+        "revision": "sha256:74fd5ab23904332e4833b9824c3e73645f5a12937ee5a10ff2298a18eeb0fef0",
+        "range": "sources/external/BD26/src/arxivv1.tex:563-566"
+      },
+      "contract": {
+        "id": "PrimeBHT.TriValid",
+        "version": "1"
+      },
+      "path": "PrimeBHT/Frozen/TriValid.lean",
+      "export": "PrimeBHT.Statements.TriValid",
+      "split_policy": {
+        "source_group": "PrimeBHT.TriValid",
+        "mode": "NOT_SPLIT",
+        "ruling_ref": "docs/RULINGS.md#R16"
+      },
+      "abi_sha256": "61dd7b5b7701dd7e64eb17037749d755397370c13852bb1b114f0ce35138adae",
+      "definition_closure": [],
+      "state": "SEALED",
+      "full_file_sha256": "d2635b6bf0b84edcfb870a1a3e8cd171cbeeda59b0fb5c73cbbf216fa496751e"
+    },
+    {
+      "id": "def_triIdx_v1",
+      "kind": "definition",
+      "author_approval": {
+        "approved_by": "Anastasios Fragkos",
+        "approved_at": "2026-11-09",
+        "approval_ref": "docs/RULINGS.md#R16",
+        "approval_version": "1"
+      },
+      "source": {
+        "revision": "sha256:74fd5ab23904332e4833b9824c3e73645f5a12937ee5a10ff2298a18eeb0fef0",
+        "range": "sources/external/BD26/src/arxivv1.tex:567-571"
+      },
+      "contract": {
+        "id": "PrimeBHT.triIdx",
+        "version": "1"
+      },
+      "path": "PrimeBHT/Frozen/TriIdx.lean",
+      "export": "PrimeBHT.Statements.triIdx",
+      "split_policy": {
+        "source_group": "PrimeBHT.triIdx",
+        "mode": "NOT_SPLIT",
+        "ruling_ref": "docs/RULINGS.md#R16"
+      },
+      "abi_sha256": "5d2c6e900e34b3b58cf18a9f3ddc9c13cd27ee92ad470728708fa6a74845b150",
+      "definition_closure": [],
+      "state": "SEALED",
+      "full_file_sha256": "014a7129e5bf7f33d9727e0e3c1e1de3c235cb732ad15572b459f1c78b67854e"
+    },
+    {
+      "id": "def_timeInt_v1",
+      "kind": "definition",
+      "author_approval": {
+        "approved_by": "Anastasios Fragkos",
+        "approved_at": "2026-11-09",
+        "approval_ref": "docs/RULINGS.md#R16",
+        "approval_version": "1"
+      },
+      "source": {
+        "revision": "sha256:74fd5ab23904332e4833b9824c3e73645f5a12937ee5a10ff2298a18eeb0fef0",
+        "range": "sources/external/BD26/src/arxivv1.tex:573-579"
+      },
+      "contract": {
+        "id": "PrimeBHT.timeInt",
+        "version": "1"
+      },
+      "path": "PrimeBHT/Frozen/TimeInt.lean",
+      "export": "PrimeBHT.Statements.timeInt",
+      "split_policy": {
+        "source_group": "PrimeBHT.timeInt",
+        "mode": "NOT_SPLIT",
+        "ruling_ref": "docs/RULINGS.md#R16"
+      },
+      "abi_sha256": "0169da53a26a64210db6e24e8118bc006a9ec4bc0055902a47f1d9092f244b7f",
+      "definition_closure": [],
+      "state": "SEALED",
+      "full_file_sha256": "8cdf53a06ce50f4edc0238d6a7daacd7491bc5018297df97ce2dd78b08afa05f"
+    },
+    {
+      "id": "def_freqNum_v1",
+      "kind": "definition",
+      "author_approval": {
+        "approved_by": "Anastasios Fragkos",
+        "approved_at": "2026-11-09",
+        "approval_ref": "docs/RULINGS.md#R16",
+        "approval_version": "1"
+      },
+      "source": {
+        "revision": "sha256:74fd5ab23904332e4833b9824c3e73645f5a12937ee5a10ff2298a18eeb0fef0",
+        "range": "sources/external/BD26/src/arxivv1.tex:573-579"
+      },
+      "contract": {
+        "id": "PrimeBHT.freqNum",
+        "version": "1"
+      },
+      "path": "PrimeBHT/Frozen/FreqNum.lean",
+      "export": "PrimeBHT.Statements.freqNum",
+      "split_policy": {
+        "source_group": "PrimeBHT.freqNum",
+        "mode": "NOT_SPLIT",
+        "ruling_ref": "docs/RULINGS.md#R16"
+      },
+      "abi_sha256": "3ad7466e3f35393cce7dbc1a0062ede473005cc944495edcdf0ec21798caefd9",
+      "definition_closure": [],
+      "state": "SEALED",
+      "full_file_sha256": "19ad490701607c755491de8fbb4de643c38102ce1ca20165b9ceb81e21e6f341"
+    },
+    {
+      "id": "def_freqInt_v1",
+      "kind": "definition",
+      "author_approval": {
+        "approved_by": "Anastasios Fragkos",
+        "approved_at": "2026-11-09",
+        "approval_ref": "docs/RULINGS.md#R16",
+        "approval_version": "1"
+      },
+      "source": {
+        "revision": "sha256:74fd5ab23904332e4833b9824c3e73645f5a12937ee5a10ff2298a18eeb0fef0",
+        "range": "sources/external/BD26/src/arxivv1.tex:573-579"
+      },
+      "contract": {
+        "id": "PrimeBHT.freqInt",
+        "version": "1"
+      },
+      "path": "PrimeBHT/Frozen/FreqInt.lean",
+      "export": "PrimeBHT.Statements.freqInt",
+      "split_policy": {
+        "source_group": "PrimeBHT.freqInt",
+        "mode": "NOT_SPLIT",
+        "ruling_ref": "docs/RULINGS.md#R16"
+      },
+      "abi_sha256": "c90c8c45ad59f5292a290bc44cc60a86659c9f252d464936d344b8f679ea0a3b",
+      "definition_closure": [
+        {
+          "path": "PrimeBHT/Frozen/FreqNum.lean",
+          "sha256": "19ad490701607c755491de8fbb4de643c38102ce1ca20165b9ceb81e21e6f341"
+        }
+      ],
+      "state": "SEALED",
+      "full_file_sha256": "d3ccbbcd4b8cfab6991c06cc44170615d537dac678efc2910f6abde76df5dab8"
+    },
+    {
+      "id": "def_intervalCentre_v1",
+      "kind": "definition",
+      "author_approval": {
+        "approved_by": "Anastasios Fragkos",
+        "approved_at": "2026-11-09",
+        "approval_ref": "docs/RULINGS.md#R16",
+        "approval_version": "1"
+      },
+      "source": {
+        "revision": "sha256:74fd5ab23904332e4833b9824c3e73645f5a12937ee5a10ff2298a18eeb0fef0",
+        "range": "sources/external/BD26/src/arxivv1.tex:503"
+      },
+      "contract": {
+        "id": "PrimeBHT.intervalCentre",
+        "version": "1"
+      },
+      "path": "PrimeBHT/Frozen/IntervalCentre.lean",
+      "export": "PrimeBHT.Statements.intervalCentre",
+      "split_policy": {
+        "source_group": "PrimeBHT.intervalCentre",
+        "mode": "NOT_SPLIT",
+        "ruling_ref": "docs/RULINGS.md#R16"
+      },
+      "abi_sha256": "3d122dfbbaae7eadb7028507bd46917844f0a30a08e70c79794aa1d0799cd4e0",
+      "definition_closure": [],
+      "state": "SEALED",
+      "full_file_sha256": "1545e74c6b97d3be2829b2630a9d500b132204348301f058db0266fcadaf7a1e"
+    },
+    {
+      "id": "def_IsAdapted_v1",
+      "kind": "definition",
+      "author_approval": {
+        "approved_by": "Anastasios Fragkos",
+        "approved_at": "2026-11-09",
+        "approval_ref": "docs/RULINGS.md#R16",
+        "approval_version": "1"
+      },
+      "source": {
+        "revision": "sha256:74fd5ab23904332e4833b9824c3e73645f5a12937ee5a10ff2298a18eeb0fef0",
+        "range": "sources/external/BD26/src/arxivv1.tex:499-509"
+      },
+      "contract": {
+        "id": "PrimeBHT.IsAdapted",
+        "version": "1"
+      },
+      "path": "PrimeBHT/Frozen/IsAdapted.lean",
+      "export": "PrimeBHT.Statements.IsAdapted",
+      "split_policy": {
+        "source_group": "PrimeBHT.IsAdapted",
+        "mode": "NOT_SPLIT",
+        "ruling_ref": "docs/RULINGS.md#R16"
+      },
+      "abi_sha256": "8eb31c48c2b835a3019771e524f36e637f89b7d6d55d9c6dfd6b5108dc6531ee",
+      "definition_closure": [
+        {
+          "path": "PrimeBHT/Frozen/IntervalCentre.lean",
+          "sha256": "1545e74c6b97d3be2829b2630a9d500b132204348301f058db0266fcadaf7a1e"
+        }
+      ],
+      "state": "SEALED",
+      "full_file_sha256": "28ef2083bd28bed9f380b912b2b14ea7878ad047a886d0eaca72cf2d64ec8a15"
+    },
+    {
+      "id": "def_pairing_v1",
+      "kind": "definition",
+      "author_approval": {
+        "approved_by": "Anastasios Fragkos",
+        "approved_at": "2026-11-09",
+        "approval_ref": "docs/RULINGS.md#R16",
+        "approval_version": "1"
+      },
+      "source": {
+        "revision": "sha256:74fd5ab23904332e4833b9824c3e73645f5a12937ee5a10ff2298a18eeb0fef0",
+        "range": "sources/external/BD26/src/arxivv1.tex:621"
+      },
+      "contract": {
+        "id": "PrimeBHT.pairing",
+        "version": "1"
+      },
+      "path": "PrimeBHT/Frozen/Pairing.lean",
+      "export": "PrimeBHT.Statements.pairing",
+      "split_policy": {
+        "source_group": "PrimeBHT.pairing",
+        "mode": "NOT_SPLIT",
+        "ruling_ref": "docs/RULINGS.md#R16"
+      },
+      "abi_sha256": "531fab1d9a9c082d176454a068dc25c6399a49541e1299b95c373b9d58ffdca9",
+      "definition_closure": [],
+      "state": "SEALED",
+      "full_file_sha256": "703a1494aa5715549c0e018362ddb0ca54c9ccc6f781ebc0936a6d10be735879"
+    },
+    {
+      "id": "def_triForm_v1",
+      "kind": "definition",
+      "author_approval": {
+        "approved_by": "Anastasios Fragkos",
+        "approved_at": "2026-11-09",
+        "approval_ref": "docs/RULINGS.md#R16",
+        "approval_version": "1"
+      },
+      "source": {
+        "revision": "sha256:74fd5ab23904332e4833b9824c3e73645f5a12937ee5a10ff2298a18eeb0fef0",
+        "range": "sources/external/BD26/src/arxivv1.tex:621"
+      },
+      "contract": {
+        "id": "PrimeBHT.triForm",
+        "version": "1"
+      },
+      "path": "PrimeBHT/Frozen/TriForm.lean",
+      "export": "PrimeBHT.Statements.triForm",
+      "split_policy": {
+        "source_group": "PrimeBHT.triForm",
+        "mode": "NOT_SPLIT",
+        "ruling_ref": "docs/RULINGS.md#R16"
+      },
+      "abi_sha256": "ab5d7b9757b8b15477ce069eb51fdcd9bc862ed99b2aa995ce0211045304c808",
+      "definition_closure": [
+        {
+          "path": "PrimeBHT/Frozen/TimeInt.lean",
+          "sha256": "8cdf53a06ce50f4edc0238d6a7daacd7491bc5018297df97ce2dd78b08afa05f"
+        },
+        {
+          "path": "PrimeBHT/Frozen/Pairing.lean",
+          "sha256": "703a1494aa5715549c0e018362ddb0ca54c9ccc6f781ebc0936a6d10be735879"
+        }
+      ],
+      "state": "SEALED",
+      "full_file_sha256": "8aeacd71b15e35ca3dc3ee837e391a7e6fc49dd6d0d024be0f1bcfa62d458789"
+    },
+    {
+      "id": "tri_restricted_eps_v1",
+      "kind": "theorem",
+      "author_approval": {
+        "approved_by": "Anastasios Fragkos",
+        "approved_at": "2026-11-09",
+        "approval_ref": "docs/RULINGS.md#R16",
+        "approval_version": "1"
+      },
+      "source": {
+        "revision": "sha256:74fd5ab23904332e4833b9824c3e73645f5a12937ee5a10ff2298a18eeb0fef0",
+        "range": "sources/external/BD26/src/arxivv1.tex:625-635"
+      },
+      "contract": {
+        "id": "PrimeBHT.tri_restricted_eps",
+        "version": "1"
+      },
+      "path": "PrimeBHT/Frozen/TriRestrictedEps.lean",
+      "export": "PrimeBHT.Statements.tri_restricted_eps",
+      "implementation": {
+        "module": "PrimeBHT.Proof.M1",
+        "export": "PrimeBHT.Proof.tri_restricted_eps"
+      },
+      "split_policy": {
+        "source_group": "PrimeBHT.tri_restricted_eps",
+        "mode": "NOT_SPLIT",
+        "ruling_ref": "docs/RULINGS.md#R16"
+      },
+      "abi_sha256": "233a529cac2e56e2bdd8529d6db3bea2e1c9d446c198b4802dc91f6c07287f1f",
+      "definition_closure": [
+        {
+          "path": "PrimeBHT/Frozen/TriValid.lean",
+          "sha256": "d2635b6bf0b84edcfb870a1a3e8cd171cbeeda59b0fb5c73cbbf216fa496751e"
+        },
+        {
+          "path": "PrimeBHT/Frozen/TriIdx.lean",
+          "sha256": "014a7129e5bf7f33d9727e0e3c1e1de3c235cb732ad15572b459f1c78b67854e"
+        },
+        {
+          "path": "PrimeBHT/Frozen/TimeInt.lean",
+          "sha256": "8cdf53a06ce50f4edc0238d6a7daacd7491bc5018297df97ce2dd78b08afa05f"
+        },
+        {
+          "path": "PrimeBHT/Frozen/FreqInt.lean",
+          "sha256": "d3ccbbcd4b8cfab6991c06cc44170615d537dac678efc2910f6abde76df5dab8"
+        },
+        {
+          "path": "PrimeBHT/Frozen/FreqNum.lean",
+          "sha256": "19ad490701607c755491de8fbb4de643c38102ce1ca20165b9ceb81e21e6f341"
+        },
+        {
+          "path": "PrimeBHT/Frozen/IsAdapted.lean",
+          "sha256": "28ef2083bd28bed9f380b912b2b14ea7878ad047a886d0eaca72cf2d64ec8a15"
+        },
+        {
+          "path": "PrimeBHT/Frozen/IntervalCentre.lean",
+          "sha256": "1545e74c6b97d3be2829b2630a9d500b132204348301f058db0266fcadaf7a1e"
+        },
+        {
+          "path": "PrimeBHT/Frozen/TriForm.lean",
+          "sha256": "8aeacd71b15e35ca3dc3ee837e391a7e6fc49dd6d0d024be0f1bcfa62d458789"
+        },
+        {
+          "path": "PrimeBHT/Frozen/Pairing.lean",
+          "sha256": "703a1494aa5715549c0e018362ddb0ca54c9ccc6f781ebc0936a6d10be735879"
+        }
+      ],
+      "state": "SEALED",
+      "prefix_sha256": "348f2adae403443765f6c734a6b6759e310cc1f69bb696097e16483fa0d73d3d",
+      "suffix_sha256": "b1131f4d769ab4a7c42346dd74e16e2cdfec62d4d2007b2f7eb91e6d8ea8e6e0",
+      "draft_allowlist": {
+        "frozen_paths": [],
+        "audit_paths": []
+      }
+    }
+  ]
+}

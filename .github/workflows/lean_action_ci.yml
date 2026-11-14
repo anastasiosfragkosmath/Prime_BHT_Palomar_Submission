@@ -1,0 +1,44 @@
+name: Lean build and checks
+
+# Manual trigger only: a full build is long (it compiles the included sources of the earlier project as well).
+# Add `push:` and `pull_request:` triggers if wanted.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 240
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      # The build produces several GB of temporary .lake artifacts; these directories are preinstalled tools on the
+      # disposable GitHub runner, not project files or GitHub cache contents.
+      - name: Free runner disk space
+        run: |
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          df -h
+      - name: Check the repository layout and the no-placeholder source policy
+        run: python3 -I scripts/check_layout.py
+      - uses: ./.github/actions/setup-lean
+      - name: Get Mathlib build cache
+        run: lake exe cache get
+      - name: Build the formalization and the statement-comparison modules
+        run: lake build
+      - name: Check the included sources and the frozen statements
+        run: |
+          python3 -I scripts/check_dependency.py
+          bash scripts/interface_check.sh
+      - name: Enforce the axiom allowlist on the audited declarations
+        run: bash scripts/axiom_audit_x2.sh

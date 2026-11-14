@@ -1,0 +1,37 @@
+module
+
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Basic
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.MeasureTheory.Function.LpSeminorm.Defs
+public import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
+public import PrimeBHT.Frozen.IsCutoff
+
+@[expose] public noncomputable section
+
+open MeasureTheory
+open scoped ENNReal
+
+set_option autoImplicit false
+
+namespace PrimeBHT.Statements
+
+/-- The real-line smooth-truncation kernel `K_{λ,μ}(y) = (χ(λy) - χ(μy)) / y`. -/
+def bhtKernelR (χ : ℝ → ℝ) (lam mu : ℝ) (y : ℝ) : ℝ := (χ (lam * y) - χ (mu * y)) / y
+
+/-- The real-line bilinear operator with smooth truncation, `∫_ℝ f(x - y) g(x + y) K_{λ,μ}(y) dy`. -/
+def bhtOpR (χ : ℝ → ℝ) (lam mu : ℝ) (f g : ℝ → ℂ) (x : ℝ) : ℂ :=
+  ∫ y, f (x - y) * g (x + y) * (bhtKernelR χ lam mu y : ℂ)
+
+/-- **M2.** For every cutoff `χ` and `1 < p, q`, `1/r = 1/p + 1/q`, `2/3 < r` there is `C` such that for all
+real `0 < λ < μ` and all Schwartz `f, g`, `‖bhtOpR χ λ μ f g‖_{L^r} ≤ C ‖f‖_{L^p} ‖g‖_{L^q}`. -/
+theorem bht_real_smooth : ∀ χ : ℝ → ℝ, IsCutoff χ →
+    ∀ p q r : ℝ, 1 < p → 1 < q → 1 / r = 1 / p + 1 / q → 2 / 3 < r →
+      ∃ C : ℝ, ∀ lam mu : ℝ, 0 < lam → lam < mu → ∀ f g : SchwartzMap ℝ ℂ,
+        eLpNorm (bhtOpR χ lam mu f g) (ENNReal.ofReal r) volume ≤
+          ENNReal.ofReal C * eLpNorm f (ENNReal.ofReal p) volume *
+            eLpNorm g (ENNReal.ofReal q) volume := by
+  sorry
+
+end PrimeBHT.Statements

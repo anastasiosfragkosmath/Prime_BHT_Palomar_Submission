@@ -1,0 +1,69 @@
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+public import Mathlib.Algebra.Order.Floor.Semiring
+public import Mathlib.MeasureTheory.Function.LpSeminorm.Defs
+public import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
+public import Mathlib.MeasureTheory.Measure.Count
+public import Mathlib.MeasureTheory.MeasurableSpace.Instances
+public import Mathlib.Data.Finsupp.Indicator
+public import Mathlib.Topology.Algebra.InfiniteSum.Defs
+public import Mathlib.Topology.Algebra.InfiniteSum.Basic
+public import Mathlib.Topology.Algebra.InfiniteSum.Group
+public import Mathlib.Topology.Algebra.InfiniteSum.Ring
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+public import Mathlib.Topology.Algebra.Support
+public import PrimeCarleson.Frozen.BlockWeight
+
+@[expose] public noncomputable section
+
+open MeasureTheory Filter Topology
+open scoped ENNReal ContDiff
+
+set_option autoImplicit false
+
+namespace PrimeBHT.Statements
+
+/-- The admissible smooth cutoff of the paper (lines 372-376): an even `C^∞` function whose topological
+support lies in `(-1, 1)` and which equals `1` on `[-1/2, 1/2]`. (`∞` is `C^∞` smoothness, not analytic.) -/
+def IsCutoff (χ : ℝ → ℝ) : Prop :=
+  ContDiff ℝ ∞ χ ∧ (∀ t, χ (-t) = χ t) ∧ tsupport χ ⊆ Set.Ioo (-1) 1 ∧
+    ∀ t ∈ Set.Icc (-1 / 2 : ℝ) (1 / 2), χ t = 1
+
+/-- `ψ(t) = (χ(t) - χ(2t)) / t` with `ψ(0) = 0` (line 378; Lean's `x / 0 = 0` gives `ψ(0) = 0`). -/
+noncomputable def psi (χ : ℝ → ℝ) (t : ℝ) : ℝ := (χ t - χ (2 * t)) / t
+
+/-- `ψ_k(t) = 2^{-k} ψ(t 2^{-k})` (line 383). -/
+noncomputable def psiK (χ : ℝ → ℝ) (k : ℕ) (t : ℝ) : ℝ := psi χ (t / 2 ^ k) / 2 ^ k
+
+/-- The unsmoothed truncated long-scale operator (lines 625-627, with `a_Q = ⌈Q^τ⌉` of line 678)
+`U^J_{Q;τ}(f, g)(x) = ∑_{Q^τ ≤ k ≤ J} ∑_n ψ_k(n) w_Q(n) f(x - n) g(x + n)` for finitely supported
+`f, g`, where `w_Q(n) = Λ_Q(|n|)` is `PrimeCarleson.blockWeight (Finset.Ioc (Q / 2) Q) n` (the paper's
+`Λ_Q` of line 351, even in `n`). For a cutoff `χ` the `n`-family has finite support, so `∑'` is the
+genuine finite sum. -/
+def uOp (χ : ℝ → ℝ) (Q : ℕ) (τ : ℝ) (J : ℕ) (f g : ℤ →₀ ℂ) (x : ℤ) : ℂ :=
+  ∑ k ∈ Finset.Icc ⌈(Q : ℝ) ^ τ⌉₊ J,
+    ∑' n : ℤ, ((psiK χ k (n : ℝ) : ℝ) : ℂ) *
+      PrimeCarleson.blockWeight (Finset.Ioc (Q / 2) Q) n * f (x - n) * g (x + n)
+
+/-- **`p:key0`, corrected form (lines 705-720; the half `e:long-unsmoothed`).** For every cutoff `χ`,
+every `τ ∈ (0,1)` and every `η > 0` there are `Q₀` and `C` such that for every dyadic `Q ≥ Q₀`, every
+truncation `J` and all finitely supported `f, g`:
+`‖U^J_{Q;τ}(f,g)‖_{ℓ¹} ≤ C Q^{-τ/2+η} ‖f‖_{ℓ²} ‖g‖_{ℓ²}`. The smoothed half `e:longgoal` of the printed
+proposition is not stated (it cannot be read literally for a fixed smoothing parameter; and nothing
+consumes it). -/
+theorem p_key0 :
+    ∀ χ : ℝ → ℝ, IsCutoff χ →
+    ∀ τ : ℝ, 0 < τ → τ < 1 →
+    ∀ η : ℝ, 0 < η →
+      ∃ Q₀ : ℕ, ∃ C : ℝ, 0 ≤ C ∧
+        ∀ Q : ℕ, (∃ j : ℕ, Q = 2 ^ j) → Q₀ ≤ Q →
+        ∀ J : ℕ, ∀ f g : ℤ →₀ ℂ,
+          eLpNorm (uOp χ Q τ J f g) 1 Measure.count ≤
+            ENNReal.ofReal (C * (Q : ℝ) ^ (-τ / 2 + η)) *
+              eLpNorm (⇑f) 2 Measure.count * eLpNorm (⇑g) 2 Measure.count  := by
+  sorry
+
+end PrimeBHT.Statements

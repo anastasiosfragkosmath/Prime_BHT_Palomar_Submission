@@ -1,0 +1,163 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/mathlib-initiative/formalization.yaml/main/schema/formalization.schema.json
+version: v0.4
+project:
+  name: The Bilinear Hilbert Transform Along the Primes
+  description: >-
+    Lean 4 formalization of the main theorem of The Bilinear Hilbert Transform
+    Along the Primes. The discrete bilinear Hilbert transform along the primes,
+    H_P(f,g)(x) = sum over n != 0 of Lambda(|n|)/n f(x-n) g(x+n), with Lambda the
+    von Mangoldt function, satisfies ||H_P(f,g)||_{l^r} <= C ||f||_{l^p} ||g||_{l^q}
+    for all finitely supported f, g on the integers, whenever p, q > 1,
+    1/r = 1/p + 1/q, 2/p + 3/q < 3 and 3/p + 2/q < 3 (the Banach range and part of
+    the quasi-Banach range). The proof is assembled from frozen, author-approved
+    intermediate theorems: a restricted-type tri-tile estimate with an epsilon-loss,
+    the smooth truncated bilinear Hilbert transform on the line and on the integers,
+    a vector-valued bilinear form estimate on R x Z/P, the key proposition p:key0,
+    and the U^3 approximation of the von Mangoldt function, which is taken from
+    the author's earlier formalization of A Variation Norm Carleson Theorem Along the Primes
+    (its import closure is included in this repository, see related_formalizations).
+    All results are checked by Lean and depend only on the standard axioms.
+  authors:
+  - Anastasios Fragkos
+  responsible_maintainers:
+  - Anastasios Fragkos
+  license: Apache-2.0
+repository:
+  role: substantive-development
+sources:
+- title: The Bilinear Hilbert Transform Along the Primes
+  authors:
+  - Anastasios Fragkos
+  - Ben Krause
+  - Michael Lacey
+  - Nazar Miheisi
+  - Yu-Chen Sun
+  type: paper
+  location: Theorem t:maintheorem
+  relationship: formalizes
+  note: 'Author-supplied manuscript: source-paper/Prime_BHT_final.tex, with bibliography source-paper/primeBHTbib.bib.'
+  author_endorsement: participated
+related_formalizations:
+- id: https://github.com/anastasiosfragkosmath/Variational-Carleson-Along-the-Primes-Palomar-Submission/tree/f0f9299287feeaea25f6b9cedd3e078b4a98f3c7
+  relationship: builds-on
+  note: >-
+    The author's Lean formalization of A Variation Norm Carleson Theorem Along the
+    Primes. The 241 modules of its PrimeCarleson library that this project imports (X3,
+    the U^3 approximation of the von Mangoldt function), together with the openai/math
+    and Carleson closure they need (see below), are included unchanged in PrimeCarleson/
+    and vendor/ from commit f0f9299287feeaea25f6b9cedd3e078b4a98f3c7; scripts/check_dependency.py checks them
+    against that revision when it is available. The three frozen definitions of that
+    library that the proof depends on (PrimeCarleson.e, PrimeCarleson.ramanujanSum,
+    PrimeCarleson.blockWeight) are bound by file hash in scripts/data/frozen-manifest.json.
+- id: https://github.com/openai/math
+  relationship: adapts
+  note: >-
+    Includes 1,245 Lean files (Combinatorics/Progressions and NumberTheory/SiegelZeros
+    from commit 4eaee87548250b2682affda7d05d947c05554bae, one DirichletL file from commit
+    adc7f1241b42e322a6451854ab7e4b4c146bf78a) under vendor/openai-math/, as adapted in
+    the earlier project (module-system, compatibility, visibility and pruning changes
+    are recorded in vendor/provenance/THIRD-PARTY.md and its JSON records); this
+    repository does not claim authorship of that code.
+- id: https://github.com/fpvandoorn/carleson
+  relationship: adapts
+  note: >-
+    Includes 33 Lean modules from commit 52cba54d4b7b444e937c7abbc67835afa2a0bb16 under
+    vendor/carleson/, ported from Lean v4.36.0-rc1 to this toolchain with the small
+    compatibility edits recorded in vendor/provenance/THIRD-PARTY.md. Original credits and
+    license notices are retained.
+classification:
+  arxiv:
+  - math.CA
+  - math.NT
+  msc2020:
+  - 42B20
+  - 11L20
+automation:
+  methods:
+  - method: agent
+    models:
+    - Claude Sonnet 5.5
+    - Claude Opus 5.5
+    - Claude Fable
+    framework: Claude Code
+    tool_setup: >-
+      Multi-agent Lean development under author direction: an orchestrator agent
+      assigned bounded proof tasks to worker agents, froze author-approved
+      statements one declaration per file with a frozen-anchor guard, and used
+      independent auditor agents for statement and seal audits. Lean checks every
+      claimed formal result. The orchestration followed the agent skills of
+      LeanAutoformalizationSkills by Scott Armstrong
+      (https://github.com/scottnarmstrong/LeanAutoformalizationSkills, CC BY 4.0), used unmodified at commit
+      1837b95b3d5a9fd8d311367603902ad7fe261adf. Models listed are the material models
+      used in the later phases; exact historical per-task model accounting is unavailable.
+  - method: manual
+    framework: Lean 4
+    tool_setup: >-
+      Author-directed selection of the paper's theorem, formalization scope and
+      route, approval of the exact Lean statements of the frozen declarations, and
+      choice of license and repository maintainership.
+  notes: >-
+    The author approved the exact Lean text of the frozen statements (the main
+    theorem, p_key0, t_finiteBV, x1_bht_smooth, bht_real_smooth, tri_restricted_eps
+    and the supporting definitions). Agent-suggested proofs count only after Lean
+    checking. Challenge.lean contains one statement-only placeholder, the main
+    theorem; Solution proofs contain no placeholders or custom axioms.
+status:
+  scope: >-
+    The full local Lean build (library, Challenge and Solution, with the included earlier-project libraries), the frozen-anchor guard, the ABI
+    comparison of the frozen statements with the approved texts, the interface check
+    and the axiom audits passed; the main theorem and its six frozen components
+    depend only on the standard axioms. See verification-report.md. Sandboxed
+    Comparator and NanoDa have not been run on the current Challenge and Solution.
+  sorry_count: 1
+  sorry_in_definitions: 0
+  axioms:
+  - propext
+  - Classical.choice
+  - Quot.sound
+  main_results:
+  - declaration: PrimeBHT.Statements.t_maintheorem
+    file: PrimeBHT/Frozen/MainTheorem.lean
+    sorry_count: 0
+    axioms:
+    - propext
+    - Classical.choice
+    - Quot.sound
+review:
+  status: self-assessed
+  reviewers: []
+  notes: >-
+    Independent AI auditors (separate agents that did not write the audited
+    material) accepted the seals of the six frozen declarations (statement text
+    equal to the approved text, provider honesty, standard axioms, absence of
+    hypothesis smuggling). No human referee has reviewed the Lean development.
+    A full-closure fresh kernel replay was started and not completed. Comparator
+    verification remains pending. Registry/editorial review remains external.
+fidelity:
+  divergences: >-
+    The paper's extension to a bounded operator is stated as the estimate on
+    finitely supported functions on the integers. The intermediate frozen
+    statements p_key0 (only the unsmoothed half of the printed proposition) and
+    tri_restricted_eps (an epsilon-loss form, not the printed corner bound) are
+    corrected forms, as are some statements of the working proof outline; the
+    main theorem is stated as in the paper. The proof of the vector-valued
+    estimate uses lattice Calderon-Zygmund and Mikhlin-type tools rather than
+    UMD-space machinery.
+alignment:
+  namespace: PrimeBHT.Statements
+  statements:
+  - source: Theorem t:maintheorem
+    lean: PrimeBHT.Statements.t_maintheorem
+    module: Solution.lean
+    checked_core: PrimeBHT.Proof.t_maintheorem
+    status: proved-and-axiom-audited; independent-ai-seal-audit-accepted; comparator-pending
+acknowledgements: >-
+  The project uses Lean, Mathlib, Comparator, and NanoDa. It includes the import
+  closure of the author's formalization of A Variation Norm Carleson Theorem Along
+  the Primes together with the code that project adapts from openai/math and from the
+  Carleson project, which retain their original attribution. The workflow (frozen,
+  author-approved statements, one declaration per file, a frozen-anchor checker and
+  independent statement and seal audits) is that of LeanAutoformalizationSkills by
+  Scott Armstrong (https://github.com/scottnarmstrong/LeanAutoformalizationSkills,
+  CC BY 4.0), used unmodified at commit 1837b95b3d5a9fd8d311367603902ad7fe261adf; its
+  files are not included here and no endorsement by its author is implied.

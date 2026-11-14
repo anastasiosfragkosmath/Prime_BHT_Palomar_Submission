@@ -1,0 +1,297 @@
+--- a/PrimeBHT/TimeFrequency/Interp/Restricted/Operator.lean
++++ b/PrimeBHT/TimeFrequency/Interp/Restricted/Operator.lean
+@@ -23,7 +23,8 @@
+ * `hmeas`: `T(f₁,f₂)` is measurable for bounded measurable `f₁,f₂`.
+ 
+ Exponents: `InUstar a₁ a₂` is `U_* = {a ∈ (0,1)² : a₁ + a₂ < 3/2}`; `alphaOf a₁ a₂ = (a₁,a₂,1-a₁-a₂)`.
+-The hull family is a hypothesis `hhull : ∀ b ∈ U_*, HullBound μ Λ (alphaOf b) (C b)` with `0 ≤ C`.
++The hull family is a hypothesis `hhull : ∀ b ∈ InReg ρ, HullBound μ Λ (alphaOf b) (C b)` with `0 ≤ C`,
++on the compact part `InReg ρ` of `U_*` only (see correction 7).
+ 
+ ## Main results
+ 
+@@ -68,6 +69,18 @@
+    nowhere), not a Banach-range strong-type estimate.
+ 6. Null `E_i` (or null `G`): handled via `IsSmall` (`Λ ≤ A Π μ(S_i)`): the blueprint's
+    `HullBound` is only for positive measures.
++
++7. **The hull hypothesis is only needed on a compact part of `U_*`.**  The original statements asked
++   `hhull : ∀ b ∈ U_*, HullBound μ Λ (alphaOf b) (C b)`.  For the tri-tile form this cannot be
++   supplied by M1(ε) with packets adapted with one exponent `N` (`N(ε)` may grow as `ε → 0`, i.e.
++   near the boundary of `U_*`).  The proofs only evaluate `hhull` at `a`, at the points
++   `(a₁, min a₂ ((1-a₁)/2))`, `(min a₁ ((1-a₂)/2), a₂)` and at `a ± (ε, 0)`: for `a ∈ InReg (2ρ)`
++   all of these lie in `InReg ρ` (`InReg.sub_left`, `InReg.sub_right`).  So `hhull` is now
++   `∀ b, InReg ρ b → HullBound …` (`weak_core`, `weak_type_of_hullBound`, `eLpNorm_le_of_hullBound`,
++   with `a ∈ InReg (2ρ)`, resp. `a ± (ε, 0) ∈ InReg (2ρ)`), `InReg (η/4)` for
++   `eLpNorm_le_of_hullBound_of_inReg` and `hRS_of_hullBound`, `InReg η` for
++   `restrictedType_of_hullBound_hRT`; `InReg` and its lemmas moved before `weak_core`.  No proof
++   changed except for the membership arguments.
+ -/
+ 
+ @[expose] public section
+@@ -191,15 +204,48 @@
+     (hy : P y y') (hz : P z z') : ∀ i : Fin 3, P (![x, y, z] i) (![x', y', z'] i) := by
+   intro i
+   fin_cases i <;> simpa
++
++/-- `U_*` away from its boundary: the compact exhaustion `{a : η ≤ a_i ≤ 1 - η, a₁ + a₂ ≤ 3/2 - η}`
++used to turn "locally bounded" into explicit uniform constants. -/
++def InReg (η b₁ b₂ : ℝ) : Prop :=
++  η ≤ b₁ ∧ b₁ ≤ 1 - η ∧ η ≤ b₂ ∧ b₂ ≤ 1 - η ∧ b₁ + b₂ ≤ 3 / 2 - η
++
++lemma InReg.inUstar {η b₁ b₂ : ℝ} (hη : 0 < η) (h : InReg η b₁ b₂) : InUstar b₁ b₂ :=
++  ⟨by linarith [h.1], by linarith [h.2.1], by linarith [h.2.2.1], by linarith [h.2.2.2.1],
++    by linarith [h.2.2.2.2]⟩
++
++lemma InReg.mono {η η' b₁ b₂ : ℝ} (h : InReg η b₁ b₂) (hη : η' ≤ η) : InReg η' b₁ b₂ :=
++  ⟨by linarith [h.1], by linarith [h.2.1], by linarith [h.2.2.1], by linarith [h.2.2.2.1],
++    by linarith [h.2.2.2.2]⟩
++
++
++lemma InReg.sub_left {ρ a₁ a₂ : ℝ} (hρ : 0 < ρ) (h : InReg (2 * ρ) a₁ a₂) :
++    InReg ρ (min a₁ ((1 - a₂) / 2)) a₂ := by
++  obtain ⟨h1, h2, h3, h4, h5⟩ := h
++  refine ⟨le_min (by linarith) (by linarith), ?_, by linarith, by linarith, ?_⟩
++  · have := min_le_left a₁ ((1 - a₂) / 2)
++    linarith
++  · have := min_le_left a₁ ((1 - a₂) / 2)
++    linarith
+ 
++lemma InReg.sub_right {ρ a₁ a₂ : ℝ} (hρ : 0 < ρ) (h : InReg (2 * ρ) a₁ a₂) :
++    InReg ρ a₁ (min a₂ ((1 - a₁) / 2)) := by
++  obtain ⟨h1, h2, h3, h4, h5⟩ := h
++  refine ⟨by linarith, by linarith, le_min (by linarith) (by linarith), ?_, ?_⟩
++  · have := min_le_left a₂ ((1 - a₁) / 2)
++    linarith
++  · have := min_le_left a₂ ((1 - a₁) / 2)
++    linarith
++
+ /-! ### The core of (RWT) -/
+ 
+ /-- Core of (RWT): the real-valued weak-type bound on a finite-measure piece `G` of a level set
+ on which `t < ‖F‖ ≤ N`, where `F` is dominated by `Λ(f₁, f₂, ·)` in the sense of `hpair`. -/
+ theorem weak_core {Λ : (Fin 3 → α → ℂ) → ℝ} {C : ℝ → ℝ → ℝ}
+     (hsub : IsSubadditive Λ) (hsmall : IsSmall μ Λ) (hC0 : ∀ b₁ b₂, 0 ≤ C b₁ b₂)
+-    (hhull : ∀ b₁ b₂, InUstar b₁ b₂ → HullBound μ Λ (alphaOf b₁ b₂) (C b₁ b₂))
+-    {a₁ a₂ : ℝ} (ha : InUstar a₁ a₂) {E₁ E₂ : Set α} (hE₁m : MeasurableSet E₁)
++    {ρ : ℝ} (hρ : 0 < ρ)
++    (hhull : ∀ b₁ b₂, InReg ρ b₁ b₂ → HullBound μ Λ (alphaOf b₁ b₂) (C b₁ b₂))
++    {a₁ a₂ : ℝ} (ha : InReg (2 * ρ) a₁ a₂) {E₁ E₂ : Set α} (hE₁m : MeasurableSet E₁)
+     (hE₂m : MeasurableSet E₂) (hE₁f : μ E₁ < ∞) (hE₂f : μ E₂ < ∞)
+     {f₁ f₂ : α → ℂ} (hf₁m : Measurable f₁) (hf₂m : Measurable f₂)
+     (hf₁ : DominatedBy E₁ f₁) (hf₂ : DominatedBy E₂ f₂) {F : α → ℂ} (hF : Measurable F)
+@@ -208,8 +254,7 @@
+     (hlow : ∀ x ∈ G, t < ‖F x‖) (hup : ∀ x ∈ G, ‖F x‖ ≤ N) :
+     t * (μ G).toReal ^ (a₁ + a₂) ≤
+       weakConst C a₁ a₂ * ((μ E₁).toReal ^ a₁ * (μ E₂).toReal ^ a₂) := by
+-  have ha' := ha
+-  obtain ⟨ha1, ha1', ha2, ha2', ha12⟩ := ha
++  obtain ⟨ha1, ha1', ha2, ha2', ha12⟩ := ha.inUstar (by linarith)
+   have hs : 0 < a₁ + a₂ := by linarith
+   have hW0 : 0 ≤ weakConst C a₁ a₂ := weakConst_nonneg hC0 a₁ a₂
+   have hP0 : 0 ≤ (μ E₁).toReal ^ a₁ * (μ E₂).toReal ^ a₂ :=
+@@ -257,7 +302,7 @@
+       · exact hlarge.1
+       · exact hlarge.2
+       · exact le_rfl
+-    obtain ⟨Et, hEtm, hEtsub, hEt2, hbd⟩ := hhull a₁ a₂ ha' ![E₁, E₂, G] hm3 hpos3 hfin3 2 hmax
++    obtain ⟨Et, hEtm, hEtsub, hEt2, hbd⟩ := hhull a₁ a₂ (ha.mono (by linarith)) ![E₁, E₂, G] hm3 hpos3 hfin3 2 hmax
+     obtain ⟨h, hm, hd, hle⟩ := pair Et hEtm hEtsub
+     have hdom : ∀ i : Fin 3, i ≠ 2 → DominatedBy (![E₁, E₂, G] i) (![f₁, f₂, h] i) := by
+       intro i hi
+@@ -287,7 +332,7 @@
+     have : 2 * C a₁ a₂ ≤ weakConst C a₁ a₂ := le_max_left _ _
+     nlinarith
+   · -- sub-case 2: some input set is larger than `G`
+-    have r6a : ∀ b₁ b₂ : ℝ, InUstar b₁ b₂ → ∀ m : ℝ, 0 < m → (∀ i, m ≤ alphaOf b₁ b₂ i) →
++    have r6a : ∀ b₁ b₂ : ℝ, InReg ρ b₁ b₂ → ∀ m : ℝ, 0 < m → (∀ i, m ≤ alphaOf b₁ b₂ i) →
+         t * (μ G).toReal ≤ restrictedConst (C b₁ b₂) m *
+           ((μ E₁).toReal ^ b₁ * (μ E₂).toReal ^ b₂ * (μ G).toReal ^ (1 - b₁ - b₂)) := by
+       intro b₁ b₂ hb m hm hmb
+@@ -306,7 +351,7 @@
+       have hb1a : b₁ ≤ a₁ := min_le_left _ _
+       have hb1h : b₁ ≤ (1 - a₂) / 2 := min_le_right _ _
+       have hb1pos : 0 < b₁ := lt_min ha1 (by linarith)
+-      have hbU : InUstar b₁ a₂ := ⟨hb1pos, by linarith, ha2, ha2', by linarith⟩
++      have hbU : InReg ρ b₁ a₂ := ha.sub_left hρ
+       have hmb : ∀ i, min b₁ a₂ ≤ alphaOf b₁ a₂ i := by
+         intro i
+         fin_cases i
+@@ -337,7 +382,7 @@
+       have hb2a : b₂ ≤ a₂ := min_le_left _ _
+       have hb2h : b₂ ≤ (1 - a₁) / 2 := min_le_right _ _
+       have hb2pos : 0 < b₂ := lt_min ha2 (by linarith)
+-      have hbU : InUstar a₁ b₂ := ⟨ha1, ha1', hb2pos, by linarith, by linarith⟩
++      have hbU : InReg ρ a₁ b₂ := ha.sub_right hρ
+       have hmb : ∀ i, min a₁ b₂ ≤ alphaOf a₁ b₂ i := by
+         intro i
+         fin_cases i
+@@ -379,16 +424,16 @@
+ theorem weak_type_of_hullBound [SigmaFinite μ] {Λ : (Fin 3 → α → ℂ) → ℝ}
+     {T : (α → ℂ) → (α → ℂ) → α → ℂ} {C : ℝ → ℝ → ℝ}
+     (hsub : IsSubadditive Λ) (hsmall : IsSmall μ Λ) (hC0 : ∀ b₁ b₂, 0 ≤ C b₁ b₂)
+-    (hhull : ∀ b₁ b₂, InUstar b₁ b₂ → HullBound μ Λ (alphaOf b₁ b₂) (C b₁ b₂))
++    {ρ : ℝ} (hρ : 0 < ρ)
++    (hhull : ∀ b₁ b₂, InReg ρ b₁ b₂ → HullBound μ Λ (alphaOf b₁ b₂) (C b₁ b₂))
+     (hdom : IsDominated μ T Λ) (hmeas : ∀ f₁ f₂, IsBdd f₁ → IsBdd f₂ → Measurable (T f₁ f₂))
+-    {a₁ a₂ : ℝ} (ha : InUstar a₁ a₂) {E₁ E₂ : Set α} (hE₁m : MeasurableSet E₁)
++    {a₁ a₂ : ℝ} (ha : InReg (2 * ρ) a₁ a₂) {E₁ E₂ : Set α} (hE₁m : MeasurableSet E₁)
+     (hE₂m : MeasurableSet E₂) (hE₁f : μ E₁ < ∞) (hE₂f : μ E₂ < ∞)
+     {f₁ f₂ : α → ℂ} (hf₁m : Measurable f₁) (hf₂m : Measurable f₂)
+     (hf₁ : DominatedBy E₁ f₁) (hf₂ : DominatedBy E₂ f₂) {t : ℝ} (ht : 0 < t) :
+     ENNReal.ofReal t * μ {x | t < ‖T f₁ f₂ x‖} ^ (a₁ + a₂) ≤
+       ENNReal.ofReal (weakConst C a₁ a₂) * μ E₁ ^ a₁ * μ E₂ ^ a₂ := by
+-  have ha' := ha
+-  obtain ⟨ha1, -, ha2, -, -⟩ := ha
++  obtain ⟨ha1, -, ha2, -, -⟩ := ha.inUstar (by linarith)
+   have hs : 0 < a₁ + a₂ := by linarith
+   have hb1 := hf₁.isBdd hf₁m
+   have hb2 := hf₂.isBdd hf₂m
+@@ -422,7 +467,7 @@
+   have hn : ∀ n, ENNReal.ofReal t * μ (G n) ^ (a₁ + a₂) ≤
+       ENNReal.ofReal (weakConst C a₁ a₂) * μ E₁ ^ a₁ * μ E₂ ^ a₂ := by
+     intro n
+-    have h1 := weak_core hsub hsmall hC0 hhull ha' hE₁m hE₂m hE₁f hE₂f hf₁m hf₂m hf₁ hf₂ hF
++    have h1 := weak_core hsub hsmall hC0 hρ hhull ha hE₁m hE₂m hE₁f hE₂f hf₁m hf₂m hf₁ hf₂ hF
+       hpair ht (N := n) (hGm n) (hGf n) (fun x hx => hx.1.1) (fun x hx => hx.1.2)
+     calc ENNReal.ofReal t * μ (G n) ^ (a₁ + a₂)
+         = ENNReal.ofReal (t * (μ (G n)).toReal ^ (a₁ + a₂)) := by
+@@ -448,10 +493,11 @@
+ theorem eLpNorm_le_of_hullBound [SigmaFinite μ] {Λ : (Fin 3 → α → ℂ) → ℝ}
+     {T : (α → ℂ) → (α → ℂ) → α → ℂ} {C : ℝ → ℝ → ℝ}
+     (hsub : IsSubadditive Λ) (hsmall : IsSmall μ Λ) (hC0 : ∀ b₁ b₂, 0 ≤ C b₁ b₂)
+-    (hhull : ∀ b₁ b₂, InUstar b₁ b₂ → HullBound μ Λ (alphaOf b₁ b₂) (C b₁ b₂))
++    {ρ : ℝ} (hρ : 0 < ρ)
++    (hhull : ∀ b₁ b₂, InReg ρ b₁ b₂ → HullBound μ Λ (alphaOf b₁ b₂) (C b₁ b₂))
+     (hdom : IsDominated μ T Λ) (hmeas : ∀ f₁ f₂, IsBdd f₁ → IsBdd f₂ → Measurable (T f₁ f₂))
+-    {a₁ a₂ ε : ℝ} (ha : InUstar a₁ a₂) (hε : 0 < ε) (hap : InUstar (a₁ + ε) a₂)
+-    (ham : InUstar (a₁ - ε) a₂) {E₁ E₂ : Set α} (hE₁m : MeasurableSet E₁)
++    {a₁ a₂ ε : ℝ} (ha : InUstar a₁ a₂) (hε : 0 < ε) (hap : InReg (2 * ρ) (a₁ + ε) a₂)
++    (ham : InReg (2 * ρ) (a₁ - ε) a₂) {E₁ E₂ : Set α} (hE₁m : MeasurableSet E₁)
+     (hE₂m : MeasurableSet E₂) (hE₁f : μ E₁ < ∞) (hE₂f : μ E₂ < ∞)
+     {f₁ f₂ : α → ℂ} (hf₁m : Measurable f₁) (hf₂m : Measurable f₂)
+     (hf₁ : DominatedBy E₁ f₁) (hf₂ : DominatedBy E₂ f₂) :
+@@ -459,13 +505,14 @@
+       ENNReal.ofReal (rsConst (a₁ + a₂) ε (weakConst C (a₁ + ε) a₂)
+         (weakConst C (a₁ - ε) a₂)) * μ E₁ ^ a₁ * μ E₂ ^ a₂ := by
+   obtain ⟨ha1, -, ha2, -, -⟩ := ha
+-  have hεa : ε < a₁ := by linarith [ham.1]
++  have hamU := ham.inUstar (by linarith)
++  have hεa : ε < a₁ := by linarith [hamU.1]
+   have hb1 := hf₁.isBdd hf₁m
+   have hb2 := hf₂.isBdd hf₂m
+   have hF := hmeas f₁ f₂ hb1 hb2
+-  have hwp := fun t (ht : 0 < t) => weak_type_of_hullBound hsub hsmall hC0 hhull hdom hmeas hap
++  have hwp := fun t (ht : 0 < t) => weak_type_of_hullBound hsub hsmall hC0 hρ hhull hdom hmeas hap
+     hE₁m hE₂m hE₁f hE₂f hf₁m hf₂m hf₁ hf₂ ht
+-  have hwm := fun t (ht : 0 < t) => weak_type_of_hullBound hsub hsmall hC0 hhull hdom hmeas ham
++  have hwm := fun t (ht : 0 < t) => weak_type_of_hullBound hsub hsmall hC0 hρ hhull hdom hmeas ham
+     hE₁m hE₂m hE₁f hE₂f hf₁m hf₂m hf₁ hf₂ ht
+   by_cases hE0 : μ E₁ = 0 ∨ μ E₂ = 0
+   · -- `T(f₁,f₂) = 0` a.e.
+@@ -510,7 +557,7 @@
+       have h := hwm t ht
+       rw [show a₁ - ε + a₂ = a₁ + a₂ - ε by ring] at h
+       refine h.trans (le_of_eq ?_)
+-      exact (ofReal_mul_rpow_mul_rpow hE₁f hE₂f hKm (by linarith [ham.1]) ha2.le).symm
++      exact (ofReal_mul_rpow_mul_rpow hE₁f hE₂f hKm (by linarith [hamU.1]) ha2.le).symm
+     have key := eLpNorm_le_of_weak_pair hF.aestronglyMeasurable hεa ha2 hε hx₁ hx₂ hKp hKm
+       hwp' hwm'
+     refine key.trans (le_of_eq ?_)
+@@ -519,20 +566,7 @@
+       (rsConst_nonneg (by linarith) hε (by linarith) hKp hKm) ha1.le ha2.le
+ 
+ /-! ### Uniform constants on compact parts of `U_*` -/
+-
+-/-- `U_*` away from its boundary: the compact exhaustion `{a : η ≤ a_i ≤ 1 - η, a₁ + a₂ ≤ 3/2 - η}`
+-used to turn "locally bounded" into explicit uniform constants. -/
+-def InReg (η b₁ b₂ : ℝ) : Prop :=
+-  η ≤ b₁ ∧ b₁ ≤ 1 - η ∧ η ≤ b₂ ∧ b₂ ≤ 1 - η ∧ b₁ + b₂ ≤ 3 / 2 - η
+-
+-lemma InReg.inUstar {η b₁ b₂ : ℝ} (hη : 0 < η) (h : InReg η b₁ b₂) : InUstar b₁ b₂ :=
+-  ⟨by linarith [h.1], by linarith [h.2.1], by linarith [h.2.2.1], by linarith [h.2.2.2.1],
+-    by linarith [h.2.2.2.2]⟩
+ 
+-lemma InReg.mono {η η' b₁ b₂ : ℝ} (h : InReg η b₁ b₂) (hη : η' ≤ η) : InReg η' b₁ b₂ :=
+-  ⟨by linarith [h.1], by linarith [h.2.1], by linarith [h.2.2.1], by linarith [h.2.2.2.1],
+-    by linarith [h.2.2.2.2]⟩
+-
+ /-- Uniform bound for `weakConst` on `InReg η`, given `C ≤ K₀` on `InReg (η/2)`. -/
+ noncomputable def weakBound (η K₀ : ℝ) : ℝ := max (2 * K₀) (K₀ / (1 - (2 : ℝ) ^ (-(η / 2))))
+ 
+@@ -581,9 +615,9 @@
+ theorem eLpNorm_le_of_hullBound_of_inReg [SigmaFinite μ] {Λ : (Fin 3 → α → ℂ) → ℝ}
+     {T : (α → ℂ) → (α → ℂ) → α → ℂ} {C : ℝ → ℝ → ℝ}
+     (hsub : IsSubadditive Λ) (hsmall : IsSmall μ Λ) (hC0 : ∀ b₁ b₂, 0 ≤ C b₁ b₂)
+-    (hhull : ∀ b₁ b₂, InUstar b₁ b₂ → HullBound μ Λ (alphaOf b₁ b₂) (C b₁ b₂))
+-    (hdom : IsDominated μ T Λ) (hmeas : ∀ f₁ f₂, IsBdd f₁ → IsBdd f₂ → Measurable (T f₁ f₂))
+-    {η K₀ : ℝ} (hη : 0 < η) (hCb : ∀ b₁ b₂, InReg (η / 4) b₁ b₂ → C b₁ b₂ ≤ K₀)
++    {η K₀ : ℝ} (hη : 0 < η)
++    (hhull : ∀ b₁ b₂, InReg (η / 4) b₁ b₂ → HullBound μ Λ (alphaOf b₁ b₂) (C b₁ b₂))
++    (hdom : IsDominated μ T Λ) (hmeas : ∀ f₁ f₂, IsBdd f₁ → IsBdd f₂ → Measurable (T f₁ f₂)) (hCb : ∀ b₁ b₂, InReg (η / 4) b₁ b₂ → C b₁ b₂ ≤ K₀)
+     {a₁ a₂ : ℝ} (ha : InReg η a₁ a₂) {E₁ E₂ : Set α} (hE₁m : MeasurableSet E₁)
+     (hE₂m : MeasurableSet E₂) (hE₁f : μ E₁ < ∞) (hE₂f : μ E₂ < ∞)
+     {f₁ f₂ : α → ℂ} (hf₁m : Measurable f₁) (hf₂m : Measurable f₂)
+@@ -601,8 +635,10 @@
+     hCb b₁ b₂ (by simpa [div_div, show (2 : ℝ) * 2 = 4 by norm_num] using hb)
+   have hKp := weakConst_le_weakBound hC0 hε hCb' hap
+   have hKm := weakConst_le_weakBound hC0 hε hCb' ham
+-  have key := eLpNorm_le_of_hullBound hsub hsmall hC0 hhull hdom hmeas
+-    (ha := (InReg.inUstar hη ⟨h1, h2, h3, h4, h5⟩)) hε (hap.inUstar hε) (ham.inUstar hε)
++  have h22 : 2 * (η / 4) = η / 2 := by ring
++  have key := eLpNorm_le_of_hullBound hsub hsmall hC0 (ρ := η / 4) (by linarith) hhull hdom hmeas
++    (ha := (InReg.inUstar hη ⟨h1, h2, h3, h4, h5⟩)) hε (by rw [h22]; exact hap)
++    (by rw [h22]; exact ham)
+     hE₁m hE₂m hE₁f hE₂f hf₁m hf₂m hf₁ hf₂
+   have hrs := ENNReal.ofReal_le_ofReal (rsConst_mono (s := a₁ + a₂) (ε := η / 2)
+     (by linarith) hε (by linarith) (weakConst_nonneg hC0 _ _) (weakConst_nonneg hC0 _ _) hKp hKm)
+@@ -614,8 +650,9 @@
+ single constant `K₀/(1 - 2^{-η})` (the `Λ` of `Strong.lean` is `fun f g h => Λ ![f, g, h]`). -/
+ theorem restrictedType_of_hullBound_hRT {Λ : (Fin 3 → α → ℂ) → ℝ} {C : ℝ → ℝ → ℝ}
+     (hC0 : ∀ b₁ b₂, 0 ≤ C b₁ b₂) (hsub : IsSubadditive Λ) (hsmall : IsSmall μ Λ)
+-    (hhull : ∀ b₁ b₂, InUstar b₁ b₂ → HullBound μ Λ (alphaOf b₁ b₂) (C b₁ b₂))
+-    {p₁ p₂ p₃ δ₀ η K₀ : ℝ} (hp : 1 / p₁ + 1 / p₂ + 1 / p₃ = 1) (hη : 0 < η)
++    {p₁ p₂ p₃ δ₀ η K₀ : ℝ}
++    (hhull : ∀ b₁ b₂, InReg η b₁ b₂ → HullBound μ Λ (alphaOf b₁ b₂) (C b₁ b₂))
++    (hp : 1 / p₁ + 1 / p₂ + 1 / p₃ = 1) (hη : 0 < η)
+     (hδ : 0 ≤ δ₀) (h₁ : η + δ₀ ≤ 1 / p₁) (h₂ : η + δ₀ ≤ 1 / p₂) (h₃ : η + δ₀ ≤ 1 / p₃)
+     (hCb : ∀ b₁ b₂, InReg η b₁ b₂ → C b₁ b₂ ≤ K₀) :
+     ∀ d₁ d₂ d₃ : ℝ, d₁ + d₂ + d₃ = 0 → |d₁| ≤ δ₀ → |d₂| ≤ δ₀ → |d₃| ≤ δ₀ →
+@@ -631,7 +668,6 @@
+   have a3 := abs_le.1 hd₃
+   have hreg : InReg η (1 / p₁ + d₁) (1 / p₂ + d₂) :=
+     ⟨by linarith, by linarith, by linarith, by linarith, by linarith⟩
+-  have hU := hreg.inUstar hη
+   have hmb : ∀ i, η ≤ alphaOf (1 / p₁ + d₁) (1 / p₂ + d₂) i := by
+     intro i
+     fin_cases i
+@@ -642,7 +678,7 @@
+     · show η ≤ 1 - (1 / p₁ + d₁) - (1 / p₂ + d₂)
+       linarith
+   have hR := restrictedType_of_hullBound hmb hη (hC0 _ _) hsub hsmall
+-    (hhull _ _ hU) (E := ![E₁, E₂, E₃]) (forall_vec3 hE₁m hE₂m hE₃m)
++    (hhull _ _ hreg) (E := ![E₁, E₂, E₃]) (forall_vec3 hE₁m hE₂m hE₃m)
+     (forall_vec3 (P := fun S => μ S < ∞) hE₁f hE₂f hE₃f) (h := ![g₁, g₂, g₃])
+     (forall_vec3 hg₁m hg₂m hg₃m) (forall_vec3₂ (P := DominatedBy) hg₁ hg₂ hg₃)
+   rw [prod_vec3] at hR
+@@ -678,9 +714,9 @@
+ theorem hRS_of_hullBound [SigmaFinite μ] {Λ : (Fin 3 → α → ℂ) → ℝ}
+     {T : (α → ℂ) → (α → ℂ) → α → ℂ} {C : ℝ → ℝ → ℝ}
+     (hsub : IsSubadditive Λ) (hsmall : IsSmall μ Λ) (hC0 : ∀ b₁ b₂, 0 ≤ C b₁ b₂)
+-    (hhull : ∀ b₁ b₂, InUstar b₁ b₂ → HullBound μ Λ (alphaOf b₁ b₂) (C b₁ b₂))
+-    (hdom : IsDominated μ T Λ) (hmeas : ∀ f₁ f₂, IsBdd f₁ → IsBdd f₂ → Measurable (T f₁ f₂))
+     {p₁ p₂ r δ₀ η K₀ : ℝ} (hpr : 1 / r = 1 / p₁ + 1 / p₂) (hη : 0 < η)
++    (hhull : ∀ b₁ b₂, InReg (η / 4) b₁ b₂ → HullBound μ Λ (alphaOf b₁ b₂) (C b₁ b₂))
++    (hdom : IsDominated μ T Λ) (hmeas : ∀ f₁ f₂, IsBdd f₁ → IsBdd f₂ → Measurable (T f₁ f₂))
+     (hδ₁ : η + 2 * δ₀ ≤ 1 / p₁) (hδ₂ : η + 2 * δ₀ ≤ 1 / p₂) (hδ₁' : 1 / p₁ + 2 * δ₀ ≤ 1 - η)
+     (hδ₂' : 1 / p₂ + 2 * δ₀ ≤ 1 - η) (hs : 1 / r ≤ 3 / 2 - η)
+     (hCb : ∀ b₁ b₂, InReg (η / 4) b₁ b₂ → C b₁ b₂ ≤ K₀) :
+@@ -696,7 +732,7 @@
+   have hreg : InReg η (1 / p₁ + t) (1 / p₂ - t) :=
+     ⟨by linarith, by linarith, by linarith, by linarith, by linarith⟩
+   have hsum : (1 / p₁ + t) + (1 / p₂ - t) = 1 / r := by linarith
+-  have key := eLpNorm_le_of_hullBound_of_inReg hsub hsmall hC0 hhull hdom hmeas hη hCb hreg
++  have key := eLpNorm_le_of_hullBound_of_inReg hsub hsmall hC0 hη hhull hdom hmeas hCb hreg
+     hE₁m hE₂m hE₁f hE₂f hg₁m hg₂m hg₁ hg₂
+   rw [hsum, one_div_one_div] at key
+   exact key

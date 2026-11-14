@@ -1,0 +1,53 @@
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Complex.CircleAddChar
+public import Mathlib.Analysis.Fourier.FourierTransform
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Basic
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
+public import Mathlib.Analysis.Calculus.IteratedDeriv.Defs
+public import Mathlib.MeasureTheory.Function.LpSeminorm.Defs
+public import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
+
+@[expose] public noncomputable section
+
+open MeasureTheory
+open scoped ENNReal FourierTransform SchwartzMap ComplexConjugate ContDiff
+
+set_option autoImplicit false
+
+namespace PrimeBHT.Statements
+
+/-- The `L^s(Y_P)` norm for the normalized counting measure on `Y_P = ℤ/P`: `((1/P) ∑_y ‖F y‖^s)^(1/s)`. -/
+def yNorm {P : ℕ} [NeZero P] (s : ℝ) (F : ZMod P → ℂ) : ℝ :=
+  ((P : ℝ)⁻¹ * ∑ y, ‖F y‖ ^ s) ^ s⁻¹
+
+/-- The tensor Schwartz function `F(x; y) = ∑_A f_A(x) e(A y / P)`. -/
+def tensorFun {P : ℕ} [NeZero P] (f : ZMod P → 𝓢(ℝ, ℂ)) (x : ℝ) (y : ZMod P) : ℂ :=
+  ∑ A : ZMod P, f A x * ZMod.stdAddChar (A * y)
+
+/-- The partial Fourier transform `F̂(ξ; y) = ∑_A f̂_A(ξ) e(A y / P)`. -/
+def tensorFourier {P : ℕ} [NeZero P] (f : ZMod P → 𝓢(ℝ, ℂ)) (ξ : ℝ) (y : ZMod P) : ℂ :=
+  ∑ A : ZMod P, 𝓕 (⇑(f A)) ξ * ZMod.stdAddChar (A * y)
+
+/-- The form `Λ_m^Π(F₁,F₂,F₃) = ∫_{ℝ²} m(ξ₂ - ξ₁) Π(F̂₁(ξ₁;·), F̂₂(ξ₂;·), F̂₃(ξ₁+ξ₂;·)) dξ₁ dξ₂`. -/
+def multiplierForm {P : ℕ} [NeZero P] (m : ℝ → ℂ)
+    (T : (ZMod P → ℂ) →ₗ[ℂ] (ZMod P → ℂ) →ₗ[ℂ] (ZMod P → ℂ) →ₗ⋆[ℂ] ℂ)
+    (f₁ f₂ f₃ : ZMod P → 𝓢(ℝ, ℂ)) : ℂ :=
+  ∫ ξ : ℝ × ℝ, m (ξ.2 - ξ.1) *
+    T (tensorFourier f₁ ξ.1) (tensorFourier f₂ ξ.2) (tensorFourier f₃ (ξ.1 + ξ.2))
+
+/-- **`t:finiteBV` (X2), all-multi-index form.** -/
+theorem t_finiteBV : ∀ u : ℝ, 1 < u → ∀ A : ℕ → ℝ, ∃ C : ℝ, 0 ≤ C ∧
+    ∀ (P : ℕ) [NeZero P] (T : (ZMod P → ℂ) →ₗ[ℂ] (ZMod P → ℂ) →ₗ[ℂ] (ZMod P → ℂ) →ₗ⋆[ℂ] ℂ)
+      (m : ℝ → ℂ), ContDiffOn ℝ ∞ m {0}ᶜ →
+      (∀ j : ℕ, ∀ t : ℝ, t ≠ 0 → |t| ^ j * ‖iteratedDeriv j m t‖ ≤ A j) →
+      ∀ CT : ℝ, (∀ F G H : ZMod P → ℂ, ‖T F G H‖ ≤ CT * yNorm 2 F * yNorm 2 G * yNorm u H) →
+      ∀ f₁ f₂ f₃ : ZMod P → 𝓢(ℝ, ℂ),
+        Integrable (fun ξ : ℝ × ℝ => m (ξ.2 - ξ.1) * T (tensorFourier f₁ ξ.1) (tensorFourier f₂ ξ.2) (tensorFourier f₃ (ξ.1 + ξ.2))) volume ∧
+        ‖multiplierForm m T f₁ f₂ f₃‖ₑ ≤ ENNReal.ofReal (C * CT) *
+          eLpNorm (fun x : ℝ => yNorm 2 (tensorFun f₁ x)) 2 volume *
+          eLpNorm (fun x : ℝ => yNorm 2 (tensorFun f₂ x)) 2 volume *
+          eLpNorm (fun x : ℝ => yNorm u (tensorFun f₃ x)) ⊤ volume := by
+  sorry
+
+end PrimeBHT.Statements
